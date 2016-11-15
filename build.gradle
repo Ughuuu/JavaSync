@@ -1,0 +1,29 @@
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+
+repositories {
+    jcenter()
+	mavenCentral()
+	  maven {
+	    url "https://repo.eclipse.org/content/groups/releases/"
+	}
+}
+
+dependencies {
+    compileOnly "org.projectlombok:lombok:1.16.10"
+	provided "org.projectlombok:lombok:1.16.10"
+	compile 'org.eclipse.jgit:org.eclipse.jgit:4.5.0.201609210915-r'
+	compile 'org.eclipse.jgit:org.eclipse.jgit.archive:4.5.0.201609210915-r'
+	compile 'commons-io:commons-io:2.5'
+    testCompile 'junit:junit:4.12'
+    compile fileTree(dir: 'libs', include: '*.jar')
+	runtime files(org.gradle.internal.jvm.Jvm.current().toolsJar)
+}
+
+task copyTestResources(type: Copy) {
+    from "${projectDir}/src/test/resources"
+    into "${buildDir}/classes/test"
+}
+
+processTestResources.dependsOn copyTestResources
