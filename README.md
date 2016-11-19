@@ -2,11 +2,15 @@
 Need to compile a Java code to either a .class or a .dex while running?
 
 **Features**
-- [ ] Loads a class implementation from file containing your Java code.
-- [ ] Keep the class in sync by checking once every x seconds if the file has been changed and reload it automatically
+- [X] Loads a class implementation from file containing your Java code.
+- [X] Keep the classes in sync by recompiling it's source code and generating a different Java bytecode.
+- [X] Also keeps your .classes and anything else nice under sync with JGit.
 
 **Dependencies**
-- [javassist](http://jboss-javassist.github.io/javassist/)
+- [JGit](https://eclipse.org/jgit/)
+- [Lombok](https://projectlombok.org/)
+- [EJC](https://eclipse.org/jdt/core/)
+- [JUnit](http://junit.org/junit4/)
 
 Want to know more?
-- This project is used in [Orange](https://github.com/Ughuuu/Orange)
+- This project is used in [GemMaker](https://github.com/Ughuuu/GemMaker)

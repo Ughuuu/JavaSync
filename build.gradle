@@ -1,24 +1,26 @@
 apply plugin: 'java'
+apply plugin: 'eclipse'
 
 sourceCompatibility = 1.8
-
 repositories {
-    jcenter()
 	mavenCentral()
-	  maven {
+	maven {
 	    url "https://repo.eclipse.org/content/groups/releases/"
+	    url 'http://repo1.maven.org/maven2'
 	}
 }
-
+    
+ext{
+     lombokVersion = "1.16.10"
+}
+   
 dependencies {
-    compileOnly "org.projectlombok:lombok:1.16.10"
-	provided "org.projectlombok:lombok:1.16.10"
+	compile 'org.eclipse.jdt.core.compiler:ecj:4.4.2'
 	compile 'org.eclipse.jgit:org.eclipse.jgit:4.5.0.201609210915-r'
 	compile 'org.eclipse.jgit:org.eclipse.jgit.archive:4.5.0.201609210915-r'
-	compile 'commons-io:commons-io:2.5'
+    compileOnly "org.projectlombok:lombok:$lombokVersion"
+    testCompileOnly "org.projectlombok:lombok:$lombokVersion"
     testCompile 'junit:junit:4.12'
-    compile fileTree(dir: 'libs', include: '*.jar')
-	runtime files(org.gradle.internal.jvm.Jvm.current().toolsJar)
 }
 
 task copyTestResources(type: Copy) {
