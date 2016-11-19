@@ -17,7 +17,6 @@ public class PullerTest {
 	private static final String localBranch = "test";
 	private static final String remote = "https://github.com/Ughuuu/JavaSync.git";
 
-	@Test
 	public void testWorkspace() throws Exception {
 		// first delete the folder if it already exists
 		assertSame(true, deleteDirectory(new File(localFolder)));
