@@ -27,6 +27,7 @@ public class Sync<T> {
 	private final String folderDestinationName;
 	private String options = "";
 	private long lastModified;
+	private boolean changed = false;
 
 	/**
 	 * Instance of the loaded class. May change depending on class reloading.
@@ -65,6 +66,12 @@ public class Sync<T> {
 		this.folderSourceName = folderNameSource;
 		this.folderDestinationName = folderNameDestination;
 		this.className = className;
+	}
+	
+	public boolean getChanged(){
+		boolean changedReturn = changed;
+		changed = false;
+		return changedReturn;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -110,6 +117,7 @@ public class Sync<T> {
 		val loadedClass = loader.loadClass(className);
 		// Instantiate the object
 		instance = (T) loadedClass.newInstance();
+		changed = true;
 		return errorStringWriter.toString();
 	}
 	
