@@ -39,7 +39,7 @@ public class SyncTest {
 				+ "		return \"this was \" + result;\n" + "	}\n" + "}\n");
 		writer.flush();
 		writer.close();
-		val loadClass = new Sync<Object>(className, ".src", new Commiter());
+		val loadClass = new Sync<Object>(className, "res/.src", "res/.src");
 		assertNotNull("The class has not been loaded", loadClass.getInstance());
 		assertSame("this was false",
 				loadClass.getInstance().getClass().getMethod("getResult").invoke(loadClass.getInstance()));

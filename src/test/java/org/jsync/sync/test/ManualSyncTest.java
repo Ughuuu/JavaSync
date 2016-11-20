@@ -34,7 +34,7 @@ public class ManualSyncTest {
 				+ "		return \"Hello World\";\n" + "	}\n" + "}\n");
 		writer.flush();
 		writer.close();
-		val loadObject = new Sync<TestInterface>(className, ".src", new Commiter());
+		val loadObject = new Sync<TestInterface>(className, "res/.src", "class/");
 		while (true) {
 			System.out.println("Error " + loadObject.update() + " .");
 			if (loadObject.getInstance() != null) {

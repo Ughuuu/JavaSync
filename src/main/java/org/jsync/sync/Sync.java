@@ -23,7 +23,8 @@ import lombok.val;
  */
 public class Sync<T> {
 	private final static ClassLoader classLoader = Sync.class.getClassLoader();
-	private final String folderName;
+	private final String folderSourceName;
+	private final String folderDestinationName;
 
 	/**
 	 * Instance of the loaded class. May change depending on class reloading.
@@ -45,8 +46,8 @@ public class Sync<T> {
 	 *            The class name
 	 * @throws Exception
 	 */
-	public Sync(String className, Updater updater) throws Exception {
-		this(className, updater.getLocalPath() + "/.src", updater);
+	public Sync(String className) throws Exception {
+		this(className, "res/.src", "res/.src");
 	}
 
 	/**
@@ -58,8 +59,9 @@ public class Sync<T> {
 	 *            The class name
 	 * @throws Exception
 	 */
-	public Sync(String className, String folderName, Updater updater) throws Exception {
-		this.folderName = updater.getLocalPath() + "/" + folderName;
+	public Sync(String className, String folderNameSource, String folderNameDestination) throws Exception {
+		this.folderSourceName = folderNameSource;
+		this.folderDestinationName = folderNameDestination;
 		this.className = className;
 		update();
 	}
@@ -89,14 +91,14 @@ public class Sync<T> {
 		val errorStream = new PrintWriter(errorStringWriter);
 		val outputStream = new PrintWriter(outputStringWriter);
 		val success = BatchCompiler
-				.compile(folderName + "/" + className.replace('.', '/') + ".java"/* + " -d" */, outputStream,
+				.compile(folderSourceName + "/" + className.replace('.', '/') + ".java -d " + folderDestinationName, outputStream,
 						errorStream, null);
 		if (success == false) {
 			return errorStringWriter.toString();
 		}
 		instance = null;
 
-		URLClassLoader loader = URLClassLoader.newInstance(new URL[] { new File(folderName).toURI().toURL() },
+		URLClassLoader loader = URLClassLoader.newInstance(new URL[] { new File(folderDestinationName).toURI().toURL() },
 				classLoader);
 		val loadedClass = loader.loadClass(className);
 		// Instantiate the object
