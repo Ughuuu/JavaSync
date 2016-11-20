@@ -26,6 +26,7 @@ public class Sync<T> {
 	private final String folderSourceName;
 	private final String folderDestinationName;
 	private String options = "";
+	private long lastModified;
 
 	/**
 	 * Instance of the loaded class. May change depending on class reloading.
@@ -85,23 +86,19 @@ public class Sync<T> {
 	 *             ?
 	 */
 	public String loadFromFile(String className) throws Exception {
-
+		String sourceName = folderSourceName + "/" + className.replace('.', '/') + ".java";
+		long newLastModified = new File(sourceName).lastModified();
+		if(newLastModified != lastModified){
+			lastModified = newLastModified;
+		}else{
+			return "";
+		}
 		val errorStringWriter = new StringWriter();
 		val outputStringWriter = new StringWriter();
 		val errorStream = new PrintWriter(errorStringWriter);
-		val outputStream = new PrintWriter(outputStringWriter);
-		
-		
-		val success1 = BatchCompiler
-				.compile("-help", outputStream,
-						errorStream, null);
-		if (success1 == false) {
-			return errorStringWriter.toString();
-		}
-		
-		
+		val outputStream = new PrintWriter(outputStringWriter);		
 		val success = BatchCompiler
-				.compile(folderSourceName + "/" + className.replace('.', '/') + ".java -d " + folderDestinationName + " " +options, outputStream,
+				.compile(sourceName + " -d " + folderDestinationName + " " +options, outputStream,
 						errorStream, null);
 		if (success == false) {
 			return errorStringWriter.toString();
