@@ -25,6 +25,7 @@ public class Sync<T> {
 	private final static ClassLoader classLoader = Sync.class.getClassLoader();
 	private final String folderSourceName;
 	private final String folderDestinationName;
+	private String options = "";
 
 	/**
 	 * Instance of the loaded class. May change depending on class reloading.
@@ -90,8 +91,18 @@ public class Sync<T> {
 		val outputStringWriter = new StringWriter();
 		val errorStream = new PrintWriter(errorStringWriter);
 		val outputStream = new PrintWriter(outputStringWriter);
+		
+		
+		val success1 = BatchCompiler
+				.compile("-help", outputStream,
+						errorStream, null);
+		if (success1 == false) {
+			return errorStringWriter.toString();
+		}
+		
+		
 		val success = BatchCompiler
-				.compile(folderSourceName + "/" + className.replace('.', '/') + ".java -d " + folderDestinationName, outputStream,
+				.compile(folderSourceName + "/" + className.replace('.', '/') + ".java -d " + folderDestinationName + " " +options, outputStream,
 						errorStream, null);
 		if (success == false) {
 			return errorStringWriter.toString();
@@ -105,7 +116,7 @@ public class Sync<T> {
 		instance = (T) loadedClass.newInstance();
 		return errorStringWriter.toString();
 	}
-
+	
 	/**
 	 * Resyncs the class instance if needed. If the class name is changed, call
 	 * with String parameter.
@@ -117,6 +128,11 @@ public class Sync<T> {
 		return loadFromFile(className);
 	}
 
+	public Sync<T> setOptions(String options){
+		this.options = options;
+		return this;
+	}
+	
 	/**
 	 * Re-sync the class instance if needed. Also changes the class name.
 	 * 

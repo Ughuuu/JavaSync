@@ -12,15 +12,20 @@ repositories {
     
 ext{
      lombokVersion = "1.16.10"
+     ecjVersion = "4.4.2"
+     jgitVersion = "4.5.0.201609210915-r"
+     jUnitVersion ="4.12"
+     sfl4jVersion = "1.6.1"
 }
    
 dependencies {
-	compile 'org.eclipse.jdt.core.compiler:ecj:4.4.2'
-	compile 'org.eclipse.jgit:org.eclipse.jgit:4.5.0.201609210915-r'
-	compile 'org.eclipse.jgit:org.eclipse.jgit.archive:4.5.0.201609210915-r'
+	compile "org.eclipse.jdt.core.compiler:ecj:$ecjVersion"
+	compile "org.eclipse.jgit:org.eclipse.jgit:$jgitVersion"
+	compile "org.eclipse.jgit:org.eclipse.jgit.archive:$jgitVersion"
+	compile group: 'org.slf4j', name: 'slf4j-simple', version: sfl4jVersion
     compileOnly "org.projectlombok:lombok:$lombokVersion"
     testCompileOnly "org.projectlombok:lombok:$lombokVersion"
-    testCompile 'junit:junit:4.12'
+    testCompile "junit:junit:$jUnitVersion"
 }
 
 task copyTestResources(type: Copy) {

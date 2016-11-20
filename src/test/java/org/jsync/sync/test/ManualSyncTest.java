@@ -19,6 +19,10 @@ import lombok.val;
 public class ManualSyncTest {
 	private static final String className = "org.jsync.sync.test.ManualTest";
 
+	/**
+	 * @param args
+	 * @throws Exception
+	 */
 	public static void main(String args[]) throws Exception {
 
 		String fileName = "res/.src/" + className.replace('.', '/');
@@ -34,7 +38,7 @@ public class ManualSyncTest {
 				+ "		return \"Hello World\";\n" + "	}\n" + "}\n");
 		writer.flush();
 		writer.close();
-		val loadObject = new Sync<TestInterface>(className, "res/.src", "class/");
+		val loadObject = new Sync<TestInterface>(className, "res/.src", "class/").setOptions("-1.7");
 		while (true) {
 			System.out.println("Error " + loadObject.update() + " .");
 			if (loadObject.getInstance() != null) {
