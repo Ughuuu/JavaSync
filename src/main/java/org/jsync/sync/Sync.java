@@ -47,7 +47,7 @@ public class Sync<T> {
 	 *            The class name
 	 * @throws Exception
 	 */
-	public Sync(String className) throws Exception {
+	public Sync(String className) {
 		this(className, "res/.src", "res/.src");
 	}
 
@@ -60,11 +60,10 @@ public class Sync<T> {
 	 *            The class name
 	 * @throws Exception
 	 */
-	public Sync(String className, String folderNameSource, String folderNameDestination) throws Exception {
+	public Sync(String className, String folderNameSource, String folderNameDestination) {
 		this.folderSourceName = folderNameSource;
 		this.folderDestinationName = folderNameDestination;
 		this.className = className;
-		update();
 	}
 
 	@SuppressWarnings("unchecked")
