@@ -114,7 +114,7 @@ public class Sync<T> {
 		val errorStream = new PrintWriter(errorStringWriter);
 		val outputStream = new PrintWriter(outputStringWriter);		
 		val success = BatchCompiler
-				.compile(files + " -d " + folderDestinationName + " -cp " + folderDestinationName + " " + options, 
+				.compile(files + " -d " + folderDestinationName + " -cp " + folderDestinationName + ";. " + options, 
 						outputStream,
 						errorStream, null);
 		if (success == false) {
