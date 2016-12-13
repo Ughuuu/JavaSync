@@ -40,7 +40,7 @@ public class SyncTest {
 		writer.flush();
 		writer.close();
 		val loadClass = new Sync<Object>(className, "res/.src", "res/.src");
-		loadClass.update();
+		System.out.println(loadClass.update());
 		assertNotNull("The class has not been loaded", loadClass.getInstance());
 		assertSame("this was false",
 				loadClass.getInstance().getClass().getMethod("getResult").invoke(loadClass.getInstance()));

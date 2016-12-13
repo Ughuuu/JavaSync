@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 
@@ -28,6 +29,7 @@ public class Sync<T> {
 	private String options = "";
 	private long lastModified;
 	private boolean changed = false;
+	private static final Sync[] nullVararg = new Sync[0];
 
 	/**
 	 * Instance of the loaded class. May change depending on class reloading.
@@ -67,8 +69,8 @@ public class Sync<T> {
 		this.folderDestinationName = folderNameDestination;
 		this.className = className;
 	}
-	
-	public boolean getChanged(){
+
+	public boolean getChanged() {
 		boolean changedReturn = changed;
 		changed = false;
 		return changedReturn;
@@ -92,10 +94,17 @@ public class Sync<T> {
 	 * @throws IllegalAccessException
 	 *             ?
 	 */
-	public String loadFromFile(String className) throws Exception {
-		String sourceName = folderSourceName + "/" + className.replace('.', '/') + ".java";
-		long newLastModified = new File(sourceName).lastModified();
-		if(newLastModified != lastModified){
+	public String loadFromFile(Sync... syncs) throws Exception {
+		StringBuilder sourceNames = new StringBuilder(folderSourceName + "/");
+		sourceNames.append(className.replace('.', '/') + ".java");
+		String thisFile = sourceNames.toString();
+		for(int i=0;i<syncs.length;i++){
+			sourceNames.append(" " + syncs[i].className.replace('.', '/') + ".java");
+		}
+		String files = sourceNames.toString();
+		long newLastModified = new File(thisFile).lastModified();
+		// only compile this file also if we must
+		if(newLastModified != lastModified || newLastModified == 0){
 			lastModified = newLastModified;
 		}else{
 			return "";
@@ -105,22 +114,28 @@ public class Sync<T> {
 		val errorStream = new PrintWriter(errorStringWriter);
 		val outputStream = new PrintWriter(outputStringWriter);		
 		val success = BatchCompiler
-				.compile(sourceName + " -d " + folderDestinationName + " " +options, outputStream,
+				.compile(files + " -d " + folderDestinationName + " -cp " + folderDestinationName + " " + options, 
+						outputStream,
 						errorStream, null);
 		if (success == false) {
 			return errorStringWriter.toString();
 		}
 		instance = null;
+		
+		updateClass();
+		
+		return errorStringWriter.toString();
+	}
 
-		URLClassLoader loader = URLClassLoader.newInstance(new URL[] { new File(folderDestinationName).toURI().toURL() },
-				classLoader);
+	private void updateClass() throws Exception {
+		URLClassLoader loader = URLClassLoader
+				.newInstance(new URL[] { new File(folderDestinationName).toURI().toURL() }, classLoader);
 		val loadedClass = loader.loadClass(className);
 		// Instantiate the object
 		instance = (T) loadedClass.newInstance();
 		changed = true;
-		return errorStringWriter.toString();
 	}
-	
+
 	/**
 	 * Resyncs the class instance if needed. If the class name is changed, call
 	 * with String parameter.
@@ -128,15 +143,25 @@ public class Sync<T> {
 	 * @throws Exception
 	 * @throws IOException
 	 */
-	public String update() throws IOException, Exception {
-		return loadFromFile(className);
+	public String update() throws Exception {
+		return loadFromFile(nullVararg);
 	}
 
-	public Sync<T> setOptions(String options){
+	public String update(Sync... others) throws Exception {
+		StringBuilder err = new StringBuilder();
+		err.append(loadFromFile(others));
+		// we compiled all files, try to update them now
+		for(int i=0;i<others.length;i++){
+			others[i].updateClass();
+		}
+		return err.toString();
+	}
+
+	public Sync<T> setOptions(String options) {
 		this.options = options;
 		return this;
 	}
-	
+
 	/**
 	 * Re-sync the class instance if needed. Also changes the class name.
 	 * 
@@ -147,6 +172,6 @@ public class Sync<T> {
 	 */
 	public String update(String className) throws IOException, Exception {
 		this.className = className;
-		return loadFromFile(className);
+		return loadFromFile(nullVararg);
 	}
 }
