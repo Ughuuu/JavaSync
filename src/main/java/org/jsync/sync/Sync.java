@@ -115,8 +115,9 @@ public class Sync<T> {
 		val outputStream = new PrintWriter(outputStringWriter);		
 		val success = BatchCompiler
 				.compile(files + " -d " + folderDestinationName 
-						+ " -cp \"" + folderDestinationName + "/*\";" 
-						+ System.getProperty("java.class.path") + " " + options, 
+						+ " -cp " + System.getProperty("java.class.path")
+						+ ";" + folderDestinationName 
+						+ " " + options, 
 						outputStream,
 						errorStream, null);
 		if (success == false) {
