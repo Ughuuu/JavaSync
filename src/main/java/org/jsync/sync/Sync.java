@@ -11,6 +11,7 @@ import java.net.URLClassLoader;
 import org.eclipse.jdt.core.compiler.batch.BatchCompiler;
 
 import lombok.Getter;
+import lombok.Setter;
 import lombok.val;
 
 /**
@@ -40,6 +41,7 @@ public class Sync<T> {
 	/**
 	 * The full name of the loaded class, with the package
 	 */
+	@Setter @Getter
 	private String className;
 
 	/**
@@ -170,18 +172,5 @@ public class Sync<T> {
 	public Sync<T> setOptions(String options) {
 		this.options = options;
 		return this;
-	}
-
-	/**
-	 * Re-sync the class instance if needed. Also changes the class name.
-	 * 
-	 * @param className
-	 *            The new class name.
-	 * @throws Exception
-	 * @throws IOException
-	 */
-	public String update(String className) throws IOException, Exception {
-		this.className = className;
-		return loadFromFile(nullVararg);
 	}
 }
