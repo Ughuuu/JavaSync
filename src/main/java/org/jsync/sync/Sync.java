@@ -165,8 +165,12 @@ public class Sync<T> {
 		StringBuilder err = new StringBuilder();
 		err.append(loadFromFile(others));
 		// we compiled all files, try to update them now
-		for(int i=0;i<others.size();i++){
-			others.get(i).updateClass();
+		try{
+			for(int i=0;i<others.size();i++){
+				others.get(i).updateClass();
+			}
+		}catch(Exception e){
+			// do nothing, error is already sent down
 		}
 		return err.toString();
 	}
