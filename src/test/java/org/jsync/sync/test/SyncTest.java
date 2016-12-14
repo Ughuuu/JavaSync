@@ -4,6 +4,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -23,12 +24,11 @@ import lombok.val;
  *
  */
 public class SyncTest {
-	private static final String className = "org.jsync.sync.test.Syncee";
+	private static final String classNameA = "org.jsync.sync.test.SynceeA";
+	private static final String classNameB = "org.jsync.sync.test.SynceeB";
 
-	@Test
-	public void testSimpleLoadSync() throws Exception {
-
-		String fileName = "res/.src/" + className.replace('.', '/');
+	private void makeSource(String classFullName, String className) throws IOException{
+		String fileName = "res/.src/" + classFullName.replace('.', '/');
 		System.out.println(fileName);
 		File file = new File(fileName);
 		file.mkdirs();
@@ -36,26 +36,45 @@ public class SyncTest {
 		Files.setAttribute(Paths.get("res/.src"), "dos:hidden", true);
 
 		PrintWriter writer = new PrintWriter(file + ".java");
-		writer.print("package org.jsync.sync.test;\n" + "\n" + "public class Syncee{\n"
+		writer.print("package org.jsync.sync.test;\n" + "\n" + "public class "+className+"{\n"
 				+ "	public final static boolean result = false;\n" + "	\n" + "	public String getResult(){\n"
 				+ "		return \"this was \" + result;\n" + "	}\n" + "}\n");
 		writer.flush();
 		writer.close();
-		val loadClass = new Sync<Object>(className, "res/.src", "res/.src");
-		System.out.println(loadClass.update());
-		assertNotNull("The class has not been loaded", loadClass.getInstance());
+	}
+	
+	@Test
+	public void testSimpleLoadSync() throws Exception {
+		makeSource(classNameA, "SynceeA");
+		makeSource(classNameB, "SynceeB");
+		val loadClassA = new Sync<Object>(classNameA, "res/.src", "res/.src");
+		val loadClassB = new Sync<Object>(classNameB, "res/.src", "res/.src");
+		List<Sync> list = new ArrayList<Sync>();
+		list.add(loadClassB);
+		loadClassA.update(list);
+		assertNotNull("The class has not been loaded", loadClassA.getInstance());
+		assertNotNull("The class has not been loaded", loadClassB.getInstance());
 		assertSame("this was false",
-				loadClass.getInstance().getClass().getMethod("getResult").invoke(loadClass.getInstance()));
-		assertSame(className, loadClass.getInstance().getClass().getName());
+				loadClassA.getInstance().getClass().getMethod("getResult").invoke(loadClassA.getInstance()));
+		assertSame("this was false",
+				loadClassB.getInstance().getClass().getMethod("getResult").invoke(loadClassB.getInstance()));
+		assertSame(classNameA, loadClassA.getInstance().getClass().getName());
+		assertSame(classNameB, loadClassB.getInstance().getClass().getName());
+		
+		
+		String fileName = "res/.src/" + classNameA.replace('.', '/');
+		System.out.println(fileName);
+		File file = new File(fileName);
+		
 		PrintWriter writerFinal = new PrintWriter(file + ".java");
-		writerFinal.print("package org.jsync.sync.test;\n" + "\n" + "public class Syncee{\n"
+		writerFinal.print("package org.jsync.sync.test;\n" + "\n" + "public class SynceeA{\n"
 				+ "	public final static boolean result = true;\n" + "	\n" + "	public String getResult(){\n"
 				+ "		return \"this was \" + result;\n" + "	}\n" + "}\n");
 		writerFinal.flush();
 		writerFinal.close();
-		loadClass.update();
+		System.out.println(loadClassA.update());
 
 		assertSame("this was true",
-				loadClass.getInstance().getClass().getMethod("getResult").invoke(loadClass.getInstance()));
+				loadClassA.getInstance().getClass().getMethod("getResult").invoke(loadClassA.getInstance()));
 	}
 }
