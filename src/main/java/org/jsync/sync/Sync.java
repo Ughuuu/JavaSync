@@ -33,7 +33,7 @@ public class Sync<T> {
 	private long lastModified;
 	private boolean changed = false;
 	private static final List<Sync> nullList = new ArrayList<Sync>();
-	URLClassLoader loader;
+	private URLClassLoader loader;
 
 	/**
 	 * Instance of the loaded class. May change depending on class reloading.
@@ -112,16 +112,13 @@ public class Sync<T> {
 		sourceNames.append(className.replace('.', '/') + ".java");
 		String thisFile = sourceNames.toString();
 		for (int i = 0; i < syncs.size(); i++) {
-			sourceNames.append(" " + syncs.get(i).className.replace('.', '/') + ".java");
+			sourceNames.append(" " + syncs.get(i).folderSourceName + "/" + syncs.get(i).className.replace('.', '/') + ".java");			
 		}
 		String files = sourceNames.toString();
 		long newLastModified = new File(thisFile).lastModified();
-		// only compile this file also if we must
-		if (newLastModified != lastModified || newLastModified == 0) {
-			lastModified = newLastModified;
-		} else {
-			return "";
-		}
+		
+		lastModified = newLastModified;
+		
 		val errorStringWriter = new StringWriter();
 		val outputStringWriter = new StringWriter();
 		val errorStream = new PrintWriter(errorStringWriter);
@@ -154,19 +151,18 @@ public class Sync<T> {
 	 * @throws IOException
 	 */
 	public String update() throws Exception {
-		loader = URLClassLoader
-			.newInstance(new URL[] { new File(folderDestinationName).toURI().toURL() }, classLoader);
+		loader = URLClassLoader.newInstance(new URL[] { new File(folderDestinationName).toURI().toURL() }, classLoader);
 		return loadFromFile(nullList);
 	}
 
 	public String update(List<Sync> others) throws Exception {
 		StringBuilder err = new StringBuilder();
-		loader = URLClassLoader
-				.newInstance(new URL[] { new File(folderDestinationName).toURI().toURL() }, classLoader);
+		loader = URLClassLoader.newInstance(new URL[] { new File(folderDestinationName).toURI().toURL() }, classLoader);
 		err.append(loadFromFile(others));
 		// we compiled all files, try to update them now
 		try {
 			for (int i = 0; i < others.size(); i++) {
+				others.get(i).loader = loader;
 				others.get(i).updateClass();
 			}
 		} catch (Exception e) {
