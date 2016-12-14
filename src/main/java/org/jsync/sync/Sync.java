@@ -76,6 +76,13 @@ public class Sync<T> {
 		return changedReturn;
 	}
 
+	public boolean needsChange(){
+		StringBuilder sourceName = new StringBuilder(folderSourceName + "/");
+		sourceName.append(className.replace('.', '/') + ".java");
+		long newLastModified = new File(sourceName.toString()).lastModified();
+		return newLastModified != lastModified || newLastModified == 0;
+	}
+	
 	@SuppressWarnings("unchecked")
 	/**
 	 * Load the class instance for the first time from the given file as the
