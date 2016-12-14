@@ -7,6 +7,8 @@ import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.jdt.core.compiler.batch.BatchCompiler;
 
@@ -30,7 +32,7 @@ public class Sync<T> {
 	private String options = "";
 	private long lastModified;
 	private boolean changed = false;
-	private static final Sync[] nullVararg = new Sync[0];
+	private static final List<Sync> nullList = new ArrayList<Sync>();
 
 	/**
 	 * Instance of the loaded class. May change depending on class reloading.
@@ -103,12 +105,12 @@ public class Sync<T> {
 	 * @throws IllegalAccessException
 	 *             ?
 	 */
-	public String loadFromFile(Sync... syncs) throws Exception {
+	public String loadFromFile(List<Sync> syncs) throws Exception {
 		StringBuilder sourceNames = new StringBuilder(folderSourceName + "/");
 		sourceNames.append(className.replace('.', '/') + ".java");
 		String thisFile = sourceNames.toString();
-		for(int i=0;i<syncs.length;i++){
-			sourceNames.append(" " + syncs[i].className.replace('.', '/') + ".java");
+		for(int i=0;i<syncs.size();i++){
+			sourceNames.append(" " + syncs.get(i).className.replace('.', '/') + ".java");
 		}
 		String files = sourceNames.toString();
 		long newLastModified = new File(thisFile).lastModified();
@@ -156,15 +158,15 @@ public class Sync<T> {
 	 * @throws IOException
 	 */
 	public String update() throws Exception {
-		return loadFromFile(nullVararg);
+		return loadFromFile(nullList);
 	}
 
-	public String update(Sync... others) throws Exception {
+	public String update(List<Sync> others) throws Exception {
 		StringBuilder err = new StringBuilder();
 		err.append(loadFromFile(others));
 		// we compiled all files, try to update them now
-		for(int i=0;i<others.length;i++){
-			others[i].updateClass();
+		for(int i=0;i<others.size();i++){
+			others.get(i).updateClass();
 		}
 		return err.toString();
 	}
