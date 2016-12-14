@@ -33,6 +33,7 @@ public class Sync<T> {
 	private long lastModified;
 	private boolean changed = false;
 	private static final List<Sync> nullList = new ArrayList<Sync>();
+	URLClassLoader loader;
 
 	/**
 	 * Instance of the loaded class. May change depending on class reloading.
@@ -43,7 +44,8 @@ public class Sync<T> {
 	/**
 	 * The full name of the loaded class, with the package
 	 */
-	@Setter @Getter
+	@Setter
+	@Getter
 	private String className;
 
 	/**
@@ -80,13 +82,13 @@ public class Sync<T> {
 		return changedReturn;
 	}
 
-	public boolean needsChange(){
+	public boolean needsChange() {
 		StringBuilder sourceName = new StringBuilder(folderSourceName + "/");
 		sourceName.append(className.replace('.', '/') + ".java");
 		long newLastModified = new File(sourceName.toString()).lastModified();
 		return newLastModified != lastModified || newLastModified == 0;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	/**
 	 * Load the class instance for the first time from the given file as the
@@ -109,40 +111,36 @@ public class Sync<T> {
 		StringBuilder sourceNames = new StringBuilder(folderSourceName + "/");
 		sourceNames.append(className.replace('.', '/') + ".java");
 		String thisFile = sourceNames.toString();
-		for(int i=0;i<syncs.size();i++){
+		for (int i = 0; i < syncs.size(); i++) {
 			sourceNames.append(" " + syncs.get(i).className.replace('.', '/') + ".java");
 		}
 		String files = sourceNames.toString();
 		long newLastModified = new File(thisFile).lastModified();
 		// only compile this file also if we must
-		if(newLastModified != lastModified || newLastModified == 0){
+		if (newLastModified != lastModified || newLastModified == 0) {
 			lastModified = newLastModified;
-		}else{
+		} else {
 			return "";
 		}
 		val errorStringWriter = new StringWriter();
 		val outputStringWriter = new StringWriter();
 		val errorStream = new PrintWriter(errorStringWriter);
-		val outputStream = new PrintWriter(outputStringWriter);		
-		val success = BatchCompiler
-				.compile(files + " -d " + folderDestinationName 
-						+ " -cp " + System.getProperty("java.class.path")
-						+ ";" + folderDestinationName 
-						+ " " + options, 
-						outputStream,
-						errorStream, null);
+		val outputStream = new PrintWriter(outputStringWriter);
+		val success = BatchCompiler.compile(files + " -d " + folderDestinationName + " -cp "
+				+ System.getProperty("java.class.path") + ";" + folderDestinationName + " " + options, outputStream,
+				errorStream, null);
 		if (success == false) {
 			return errorStringWriter.toString();
 		}
 		instance = null;
-		
+
 		updateClass();
-		
+
 		return errorStringWriter.toString();
 	}
 
 	private void updateClass() throws Exception {
-		URLClassLoader loader = URLClassLoader
+		loader = URLClassLoader
 				.newInstance(new URL[] { new File(folderDestinationName).toURI().toURL() }, classLoader);
 		val loadedClass = loader.loadClass(className);
 		// Instantiate the object
@@ -165,11 +163,11 @@ public class Sync<T> {
 		StringBuilder err = new StringBuilder();
 		err.append(loadFromFile(others));
 		// we compiled all files, try to update them now
-		try{
-			for(int i=0;i<others.size();i++){
+		try {
+			for (int i = 0; i < others.size(); i++) {
 				others.get(i).updateClass();
 			}
-		}catch(Exception e){
+		} catch (Exception e) {
 			// do nothing, error is already sent down
 		}
 		return err.toString();
