@@ -140,8 +140,6 @@ public class Sync<T> {
 	}
 
 	private void updateClass() throws Exception {
-		loader = URLClassLoader
-				.newInstance(new URL[] { new File(folderDestinationName).toURI().toURL() }, classLoader);
 		val loadedClass = loader.loadClass(className);
 		// Instantiate the object
 		instance = (T) loadedClass.newInstance();
@@ -156,11 +154,15 @@ public class Sync<T> {
 	 * @throws IOException
 	 */
 	public String update() throws Exception {
+		loader = URLClassLoader
+			.newInstance(new URL[] { new File(folderDestinationName).toURI().toURL() }, classLoader);
 		return loadFromFile(nullList);
 	}
 
 	public String update(List<Sync> others) throws Exception {
 		StringBuilder err = new StringBuilder();
+		loader = URLClassLoader
+				.newInstance(new URL[] { new File(folderDestinationName).toURI().toURL() }, classLoader);
 		err.append(loadFromFile(others));
 		// we compiled all files, try to update them now
 		try {
