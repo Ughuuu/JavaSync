@@ -127,9 +127,6 @@ public class Sync<T> {
 		val success = BatchCompiler.compile(files + " -d " + folderDestinationName + " -cp "
 				+ System.getProperty("java.class.path") + ";" + folderDestinationName + " " + options, outputStream,
 				errorStream, null);
-		if (success == false) {
-			return errorStringWriter.toString();
-		}
 		instance = null;
 
 		updateClass();
@@ -138,7 +135,12 @@ public class Sync<T> {
 	}
 
 	private void updateClass() throws Exception {
-		val loadedClass = loader.loadClass(className);
+		Class<?> loadedClass;
+		try{
+			loadedClass = loader.loadClass(className);
+		}catch(Exception e){
+			return;
+		}
 		// Instantiate the object
 		instance = (T) loadedClass.newInstance();
 		changed = true;
@@ -169,13 +171,13 @@ public class Sync<T> {
 		loader = URLClassLoader.newInstance(new URL[] { new File(folderDestinationName).toURI().toURL() }, classLoader);
 		err.append(loadFromFile(others));
 		// we compiled all files, try to update them now
-		try {
-			for (int i = 0; i < others.size(); i++) {
+		for (int i = 0; i < others.size(); i++) {
+			try {
 				others.get(i).loader = loader;
 				others.get(i).updateClass();
+			} catch (Exception e) {
+				// do nothing, try to reload other class
 			}
-		} catch (Exception e) {
-			// do nothing, error is already sent down
 		}
 		return err.toString();
 	}
