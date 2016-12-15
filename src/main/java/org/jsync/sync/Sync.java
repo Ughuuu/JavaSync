@@ -112,13 +112,14 @@ public class Sync<T> {
 		sourceNames.append(className.replace('.', '/') + ".java");
 		String thisFile = sourceNames.toString();
 		for (int i = 0; i < syncs.size(); i++) {
-			sourceNames.append(" " + syncs.get(i).folderSourceName + "/" + syncs.get(i).className.replace('.', '/') + ".java");			
+			sourceNames.append(
+					" " + syncs.get(i).folderSourceName + "/" + syncs.get(i).className.replace('.', '/') + ".java");
 		}
 		String files = sourceNames.toString();
 		long newLastModified = new File(thisFile).lastModified();
-		
+
 		lastModified = newLastModified;
-		
+
 		val errorStringWriter = new StringWriter();
 		val outputStringWriter = new StringWriter();
 		val errorStream = new PrintWriter(errorStringWriter);
@@ -151,12 +152,20 @@ public class Sync<T> {
 	 * @throws IOException
 	 */
 	public String update() throws Exception {
+		if (loader != null) {
+			loader.close();
+			loader = null;
+		}
 		loader = URLClassLoader.newInstance(new URL[] { new File(folderDestinationName).toURI().toURL() }, classLoader);
 		return loadFromFile(nullList);
 	}
 
 	public String update(List<Sync> others) throws Exception {
 		StringBuilder err = new StringBuilder();
+		if (loader != null) {
+			loader.close();
+			loader = null;
+		}
 		loader = URLClassLoader.newInstance(new URL[] { new File(folderDestinationName).toURI().toURL() }, classLoader);
 		err.append(loadFromFile(others));
 		// we compiled all files, try to update them now
@@ -169,6 +178,19 @@ public class Sync<T> {
 			// do nothing, error is already sent down
 		}
 		return err.toString();
+	}
+
+	public void reloadClasses(List<Sync> others) {
+		try {
+			for (int i = 0; i < others.size(); i++) {
+				if (others.get(i).getInstance() != null) {
+					others.get(i).loader = loader;
+					others.get(i).updateClass();
+				}
+			}
+		} catch (Exception e) {
+			// do nothing, error is already sent down
+		}
 	}
 
 	public Sync<T> setOptions(String options) {
