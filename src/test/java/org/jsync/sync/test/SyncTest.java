@@ -49,11 +49,15 @@ public class SyncTest {
 		makeSource(classNameB, "SynceeB");
 		val loadClassA = new Sync<Object>(classNameA, "res/.src", "res/.src");
 		val loadClassB = new Sync<Object>(classNameB, "res/.src", "res/.src");
+		assertSame("This class needs to change", true, loadClassA.needsChange());
+		assertSame("This class needs to change", true, loadClassB.needsChange());
 		List<Sync> list = new ArrayList<Sync>();
 		list.add(loadClassB);
 		loadClassA.update(list);
 		assertNotNull("The class has not been loaded", loadClassA.getInstance());
 		assertNotNull("The class has not been loaded", loadClassB.getInstance());
+		assertSame("This class doesn't need to change", false, loadClassA.needsChange());
+		assertSame("This class doesn't need to change", false, loadClassB.needsChange());
 		assertSame("this was false",
 				loadClassA.getInstance().getClass().getMethod("getResult").invoke(loadClassA.getInstance()));
 		assertSame("this was false",
@@ -72,6 +76,7 @@ public class SyncTest {
 				+ "		return \"this was \" + result;\n" + "	}\n" + "}\n");
 		writerFinal.flush();
 		writerFinal.close();
+		assertSame("This class needs to change", true, loadClassA.needsChange());
 		System.out.println(loadClassA.update());
 
 		assertSame("this was true",

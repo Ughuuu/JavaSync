@@ -118,7 +118,6 @@ public class Sync<T> {
 		String files = sourceNames.toString();
 		long newLastModified = new File(thisFile).lastModified();
 
-		lastModified = newLastModified;
 
 		val errorStringWriter = new StringWriter();
 		val outputStringWriter = new StringWriter();
@@ -130,6 +129,9 @@ public class Sync<T> {
 		instance = null;
 
 		updateClass();
+		if(instance != null){
+			lastModified = newLastModified;
+		}
 
 		return errorStringWriter.toString();
 	}
@@ -170,16 +172,27 @@ public class Sync<T> {
 		}
 		loader = URLClassLoader.newInstance(new URL[] { new File(folderDestinationName).toURI().toURL() }, classLoader);
 		err.append(loadFromFile(others));
+		String errRet = err.toString();
 		// we compiled all files, try to update them now
 		for (int i = 0; i < others.size(); i++) {
 			try {
+				Object oldInstance = others.get(i).getInstance();
 				others.get(i).loader = loader;
 				others.get(i).updateClass();
+				// if something changed
+				if(!others.get(i).getInstance().equals(oldInstance)){
+					StringBuilder sourceNames = new StringBuilder(others.get(i).folderSourceName + "/");
+					sourceNames.append(others.get(i).className.replace('.', '/') + ".java");
+					String thisFile = sourceNames.toString();
+					long newLastModified = new File(thisFile).lastModified();
+					
+					others.get(i).lastModified = newLastModified;
+				}
 			} catch (Exception e) {
 				// do nothing, try to reload other class
 			}
 		}
-		return err.toString();
+		return errRet;
 	}
 
 	public void reloadClasses(List<Sync> others) {
