@@ -12,12 +12,9 @@ import lombok.val;
 
 /**
  * Tests the functionality of Sync class.
- * 
- * @author Dragos
- *
  */
 public class ManualSyncTest {
-	private static final String className = "org.jsync.sync.test.ManualTest";
+	private static final String className = "org.jsync.sync.test.ManualTest1";
 
 	/**
 	 * @param args
@@ -25,25 +22,37 @@ public class ManualSyncTest {
 	 */
 	public static void main(String args[]) throws Exception {
 
-		String fileName = "res/.src/" + className.replace('.', '/');
+		String fileName = className.replace('.', '/');
 		System.out.println(fileName);
 		File file = new File(fileName);
 		file.mkdirs();
 
-		Files.setAttribute(Paths.get("res/.src"), "dos:hidden", true);
-
 		PrintWriter writer = new PrintWriter(file + ".java");
-		writer.print("package org.jsync.sync.test;\n" + "\n" + "public class ManualTest implements TestInterface{\n"
-				+ "	public final static boolean result = false;\n" + "	\n" + "	public String getResult(){\n"
-				+ "		return \"Hello World\";\n" + "	}\n" + "}\n");
+		writer.print(
+				  "package org.jsync.sync.test;\n" 
+				+ "\n" 
+				+ "public class ManualTest1 implements TestInterface{\n"
+				+ "	public final static boolean result = false;\n" 
+				+ "	\n" 
+				+ "	public String getResult(){\n"
+				+ "		return \"Hello World\";\n" 
+				+ "	}\n" 
+				+ "}\n");
 		writer.flush();
 		writer.close();
-		val loadObject = new Sync<TestInterface>(className, "res/.src", "class/").setOptions("-1.7");
+		Sync.options = "-8";
+		val loadClass = new Sync<TestInterface>(ManualSyncTest.class.getClassLoader(), className, "org",
+				"res/src/");
+		TestInterface obj;
 		while (true) {
-			System.out.println("Error " + loadObject.update() + " .");
-			if (loadObject.getInstance() != null) {
-				String result = loadObject.getInstance().getResult();
-				System.out.println(result);
+			if (loadClass.isDirty()) {
+				if (Sync.update(loadClass)) {
+					obj = loadClass.newInstance();
+					String result = obj.getResult();
+					System.out.println(result);
+				} else {
+					System.out.println(loadClass.getCompileError());
+				}
 			}
 		}
 	}

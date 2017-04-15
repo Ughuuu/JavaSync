@@ -1,6 +1,6 @@
 package org.jsync.sync.test;
 
-public class SynceeA{
+public class SynceeB{
 	public final static boolean result = false;
 	
 	public String getResult(){

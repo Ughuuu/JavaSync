@@ -11,9 +11,9 @@ repositories {
 }
     
 ext{
-     lombokVersion = "1.16.10"
-     ecjVersion = "4.4.2"
-     jgitVersion = "4.5.0.201609210915-r"
+     lombokVersion = "1.16.16"
+     ecjVersion = "4.6.1"
+     jgitVersion = "4.7.0.201704051617-r"
      jUnitVersion ="4.12"
      sfl4jVersion = "1.6.1"
 }

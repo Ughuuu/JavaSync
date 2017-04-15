@@ -1,215 +1,273 @@
 package org.jsync.sync;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jdt.core.compiler.batch.BatchCompiler;
 
 import lombok.Getter;
-import lombok.Setter;
 import lombok.val;
 
 /**
  * The Sync class contains a T class instance that changes if the linked file
  * changes. If that happens, the class is recompiled.
- * 
- * @author Dragos
- *
- * @param <T>
- *            The class type
  */
 public class Sync<T> {
-	private final static ClassLoader classLoader = Sync.class.getClassLoader();
+	/**
+	 * The full name of the class, with the package. The package contains
+	 * dots(.) and the class and package are united by a dot(.) as well.
+	 */
+	@Getter
+	private final String className;
+
+	/**
+	 * An instance of file for the class given by the class name. It has .java
+	 * at the end and is located at the source folder.
+	 */
+	private final File classFile;
+
+	/**
+	 * The source folder of the class. This is relative to the root project.
+	 */
+	@Getter
 	private final String folderSourceName;
+
+	/**
+	 * The destination folder of the class. This is relative to the root
+	 * project.
+	 */
+	@Getter
 	private final String folderDestinationName;
-	private String options = "";
-	private long lastModified;
-	private boolean changed = false;
-	private static final List<Sync> nullList = new ArrayList<Sync>();
-	private URLClassLoader loader;
 
 	/**
-	 * Instance of the loaded class. May change depending on class reloading.
+	 * Options from the Eclipse Java Core Compiler Package
+	 */
+	public static String options = "";
+
+	/**
+	 * The date the file containing the class was last compiled.
 	 */
 	@Getter
-	private T instance = null;
+	private long lastCompiled;
 
 	/**
-	 * The full name of the loaded class, with the package
+	 * The output from the compile of the source file.
 	 */
-	@Setter
 	@Getter
-	private String className;
+	private String compileOutput = "";
 
 	/**
-	 * Constructor that calls the loadFromFile function.
-	 * 
-	 * @param filePath
-	 *            The path of the file to keep in sync with
-	 * @param className
-	 *            The class name
-	 * @throws Exception
+	 * The error from the compile of the source file.
 	 */
-	public Sync(String className) {
-		this(className, "res/.src", "res/.src");
-	}
+	@Getter
+	private String compileError = "";
+
+	private URLClassLoader urlClassLoader;
+	private final ClassLoader classLoader;
 
 	/**
-	 * Constructor that calls the loadFromFile function.
+	 * Construct a new Sync object for the specified className.
 	 * 
-	 * @param filePath
-	 *            The path of the file to keep in sync with
+	 * @param classLoader
+	 *            The class loader this will inherit from
 	 * @param className
-	 *            The class name
-	 * @throws Exception
+	 *            The full name of the class to be loaded
+	 * @param folderSourceName
+	 *            The source folder name
+	 * @param folderDestinationName
+	 *            The destination folder name
 	 */
-	public Sync(String className, String folderNameSource, String folderNameDestination) {
-		this.folderSourceName = folderNameSource;
-		this.folderDestinationName = folderNameDestination;
+	public Sync(ClassLoader classLoader, String className, String folderSourceName, String folderDestinationName) {
+		if (!(folderDestinationName.endsWith("/") || folderDestinationName.endsWith("\\"))) {
+			folderDestinationName += '/';
+		}
+		if (folderSourceName.equals("")) {
+			folderSourceName = "./";
+		}
+		if (!(folderSourceName.endsWith("/") || folderSourceName.endsWith("\\"))) {
+			folderSourceName += '/';
+		}
+		if (folderDestinationName.equals("")) {
+			folderDestinationName = "./";
+		}
 		this.className = className;
+		this.classLoader = classLoader;
+		this.folderDestinationName = folderDestinationName;
+		this.folderSourceName = folderSourceName;
+		this.classFile = new File((className.replace('.', '/') + ".java").toString());
 	}
 
-	public boolean getChanged() {
-		boolean changedReturn = changed;
-		changed = false;
-		return changedReturn;
-	}
-
-	public boolean needsChange() {
-		StringBuilder sourceName = new StringBuilder(folderSourceName + "/");
-		sourceName.append(className.replace('.', '/') + ".java");
-		long newLastModified = new File(sourceName.toString()).lastModified();
-		return newLastModified != lastModified || newLastModified == 0;
-	}
-
+	/**
+	 * Get a new instance of the class or null
+	 * 
+	 * @return A new instance or null.
+	 */
 	@SuppressWarnings("unchecked")
+	public T newInstance() {
+		try {
+			return (T) urlClassLoader.loadClass(className).newInstance();
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
 	/**
-	 * Load the class instance for the first time from the given file as the
-	 * given name.
+	 * Checks if the source file has been modified
 	 * 
-	 * @param filePath
-	 *            The path to the file that contains the java code
-	 * @param className
-	 *            The class name, including the package
-	 * @throws ClassNotFoundException
-	 *             Wrong given className
-	 * @throws IOException
-	 *             Cannot open file
-	 * @throws InstantiationException
-	 *             ?
-	 * @throws IllegalAccessException
-	 *             ?
+	 * @return The modified state
 	 */
-	public String loadFromFile(List<Sync> syncs) throws Exception {
-		StringBuilder sourceNames = new StringBuilder(folderSourceName + "/");
-		sourceNames.append(className.replace('.', '/') + ".java");
-		String thisFile = sourceNames.toString();
-		for (int i = 0; i < syncs.size(); i++) {
-			sourceNames.append(
-					" " + syncs.get(i).folderSourceName + "/" + syncs.get(i).className.replace('.', '/') + ".java");
-		}
-		String files = sourceNames.toString();
-		long newLastModified = new File(thisFile).lastModified();
-
-
-		val errorStringWriter = new StringWriter();
-		val outputStringWriter = new StringWriter();
-		val errorStream = new PrintWriter(errorStringWriter);
-		val outputStream = new PrintWriter(outputStringWriter);
-		val success = BatchCompiler.compile(files + " -d " + folderDestinationName + " -cp "
-				+ System.getProperty("java.class.path") + ";" + folderDestinationName + " " + options, outputStream,
-				errorStream, null);
-		instance = null;
-
-		updateClass();
-		if(instance != null){
-			lastModified = newLastModified;
-		}
-
-		return errorStringWriter.toString();
-	}
-
-	private void updateClass() throws Exception {
-		Class<?> loadedClass;
-		try{
-			loadedClass = loader.loadClass(className);
-		}catch(Exception e){
-			return;
-		}
-		// Instantiate the object
-		instance = (T) loadedClass.newInstance();
-		changed = true;
+	public boolean isDirty() {
+		return classFile.lastModified() != lastCompiled || lastCompiled == 0;
 	}
 
 	/**
-	 * Resyncs the class instance if needed. If the class name is changed, call
-	 * with String parameter.
+	 * Update all the given classes at once. They should be from the same folder
+	 * as source and have the same destination folder and the same options.
 	 * 
+	 * @param syncs
+	 *            The sync classes, all in the same root folder.
+	 * @return Wether the compilation succeded and changes happened.
 	 * @throws Exception
-	 * @throws IOException
 	 */
-	public String update() throws Exception {
-		if (loader != null) {
-			loader.close();
-			loader = null;
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public static boolean updateAll(List<Sync> syncs) {
+		// check if update is needed
+		boolean areDirty = false;
+		for (val sync : syncs) {
+			sync.compileError = "";
+			sync.compileOutput = "";
+			areDirty = areDirty | sync.isDirty();
 		}
-		loader = URLClassLoader.newInstance(new URL[] { new File(folderDestinationName).toURI().toURL() }, classLoader);
-		return loadFromFile(nullList);
-	}
-
-	public String update(List<Sync> others) throws Exception {
-		StringBuilder err = new StringBuilder();
-		if (loader != null) {
-			loader.close();
-			loader = null;
+		if (!areDirty) {
+			return false;
 		}
-		loader = URLClassLoader.newInstance(new URL[] { new File(folderDestinationName).toURI().toURL() }, classLoader);
-		err.append(loadFromFile(others));
-		String errRet = err.toString();
-		// we compiled all files, try to update them now
-		for (int i = 0; i < others.size(); i++) {
-			try {
-				Object oldInstance = others.get(i).getInstance();
-				others.get(i).loader = loader;
-				others.get(i).updateClass();
-				// if something changed
-				if(!others.get(i).getInstance().equals(oldInstance)){
-					StringBuilder sourceNames = new StringBuilder(others.get(i).folderSourceName + "/");
-					sourceNames.append(others.get(i).className.replace('.', '/') + ".java");
-					String thisFile = sourceNames.toString();
-					long newLastModified = new File(thisFile).lastModified();
-					
-					others.get(i).lastModified = newLastModified;
-				}
-			} catch (Exception e) {
-				// do nothing, try to reload other class
+		// check if files exist
+		val first = syncs.get(0);
+		URL url;
+		boolean result = true;
+		for (val sync : syncs) {
+			if (!sync.classFile.exists() || sync.classFile.isDirectory()) {
+				sync.compileError += "Cannot find file: " + sync.classFile.getPath() + '\n';
+				result = false;
 			}
 		}
-		return errRet;
+		if (result == false) {
+			return false;
+		}
+		for (val sync : syncs) {
+			sync.lastCompiled = sync.classFile.lastModified();
+		}
+		String filesFolder = first.folderSourceName;
+
+		val errorWriter = new StringWriter();
+		val outputWriter = new StringWriter();
+		val errorStream = new PrintWriter(errorWriter);
+		val outputStream = new PrintWriter(outputWriter);
+		val success = BatchCompiler.compile(filesFolder + " -d " + first.folderDestinationName + " -cp "
+				+ System.getProperty("java.class.path") + ";" + first.folderDestinationName + " " + Sync.options,
+				outputStream, errorStream, null);
+		if ("".equals(errorWriter.toString()) && success) {
+			// check if generated classes exists
+			try {
+				File root = new File(first.folderDestinationName);
+				if (!root.exists() || !root.isDirectory()) {
+					for (val sync : syncs) {
+						sync.compileError += "Cannot get containing folder: " + root.getPath() + '\n';
+					}
+					return false;
+				}
+				url = root.toURI().toURL();
+			} catch (Exception e) {
+				for (val sync : syncs) {
+					sync.compileError += e.toString() + '\n';
+				}
+				return false;
+			}
+			val urlClassLoader = URLClassLoader.newInstance(new URL[] { url }, first.classLoader);
+			for (val sync : syncs) {
+				try {
+					sync.checkClass(urlClassLoader);
+				} catch (Exception e) {
+					sync.compileError += e.toString();
+					result = false;
+				}
+			}
+			// handle error for each
+			for (val sync : syncs) {
+				sync.compileError = errorWriter.toString();
+				sync.compileOutput = outputWriter.toString();
+			}
+			return result;
+		}
+		return false;
 	}
 
-	public void reloadClasses(List<Sync> others) {
+	/**
+	 * Update the given class. If it depends on other classes, use updateAll.
+	 * 
+	 * @param sync
+	 *            The sync classes, all in the same root folder.
+	 * @return If the compilation succeeded and changes happened.
+	 * @throws Exception
+	 */
+	public static <T> boolean update(Sync<T> sync) {
+		sync.compileError = "";
+		sync.compileOutput = "";
+		if (!sync.isDirty()) {
+			return false;
+		}
+		// check if file exist
 		try {
-			for (int i = 0; i < others.size(); i++) {
-				if (others.get(i).getInstance() != null) {
-					others.get(i).loader = loader;
-					others.get(i).updateClass();
-				}
+			if (!sync.classFile.exists() || sync.classFile.isDirectory()) {
+				sync.compileError += "Cannot find file: " + sync.classFile.getPath() + '\n';
+				return false;
 			}
 		} catch (Exception e) {
-			// do nothing, error is already sent down
+			sync.compileError += e.toString();
+			return false;
 		}
+		sync.lastCompiled = sync.classFile.lastModified();
+
+		val errorWriter = new StringWriter();
+		val outputWriter = new StringWriter();
+		val errorStream = new PrintWriter(errorWriter);
+		val outputStream = new PrintWriter(outputWriter);
+		val compileCommand = (sync.className.replace('.', '/') + ".java").toString() + " -d "
+				+ sync.folderDestinationName + " -cp " + System.getProperty("java.class.path") + ";"
+				+ sync.folderDestinationName + " " + Sync.options;
+		val success = BatchCompiler.compile(compileCommand, outputStream, errorStream, null);
+		sync.compileError = errorWriter.toString();
+		sync.compileOutput = outputWriter.toString();
+		if ("".equals(sync.compileError) && success) {
+
+			URL url;
+			try{
+				File root = new File(sync.folderDestinationName);
+				url = root.toURI().toURL();
+			}catch (Exception e) {
+				sync.compileError += e.toString();
+				return false;
+			}
+			val urlClassLoader = URLClassLoader.newInstance(new URL[] { url }, sync.classLoader);
+			try {
+				sync.checkClass(urlClassLoader);
+			} catch (Exception e) {
+				sync.compileError += e.toString();
+				return false;
+			}
+			return true;
+		}
+		return false;
 	}
 
-	public Sync<T> setOptions(String options) {
-		this.options = options;
-		return this;
+	private void checkClass(URLClassLoader newClassLoader) throws Exception {
+		newClassLoader.loadClass(className);
+		if (urlClassLoader != null)
+			urlClassLoader.close();
+		urlClassLoader = newClassLoader;
 	}
 }
