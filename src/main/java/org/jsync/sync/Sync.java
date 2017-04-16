@@ -170,6 +170,12 @@ public class Sync<T> {
 		val success = BatchCompiler.compile(filesFolder + " -d " + first.folderDestinationName + " -cp "
 				+ System.getProperty("java.class.path") + ";" + first.folderDestinationName + " " + Sync.options,
 				outputStream, errorStream, null);
+		System.out.println(new File(first.folderDestinationName).getAbsolutePath());
+		// handle error for each
+		for (val sync : syncs) {
+			sync.compileError = errorWriter.toString();
+			sync.compileOutput = outputWriter.toString();
+		}
 		if ("".equals(errorWriter.toString()) && success) {
 			// check if generated classes exists
 			try {
@@ -195,11 +201,6 @@ public class Sync<T> {
 					sync.compileError += e.toString();
 					result = false;
 				}
-			}
-			// handle error for each
-			for (val sync : syncs) {
-				sync.compileError = errorWriter.toString();
-				sync.compileOutput = outputWriter.toString();
 			}
 			return result;
 		}
@@ -243,12 +244,11 @@ public class Sync<T> {
 		sync.compileError = errorWriter.toString();
 		sync.compileOutput = outputWriter.toString();
 		if ("".equals(sync.compileError) && success) {
-
 			URL url;
-			try{
+			try {
 				File root = new File(sync.folderDestinationName);
 				url = root.toURI().toURL();
-			}catch (Exception e) {
+			} catch (Exception e) {
 				sync.compileError += e.toString();
 				return false;
 			}

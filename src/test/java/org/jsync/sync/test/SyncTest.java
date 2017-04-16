@@ -32,6 +32,7 @@ public class SyncTest {
 		System.out.println(fileName);
 		File file = new File(fileName);
 		file.mkdirs();
+		new File("./res/src/").mkdirs();
 
 		PrintWriter writer = new PrintWriter(file + ".java");
 		writer.print("package org.jsync.sync.test;\n" + "\n" + "public class "+className+"{\n"
@@ -47,8 +48,8 @@ public class SyncTest {
 		makeSource(classNameA, "SynceeA");
 		makeSource(classNameB, "SynceeB");
 		Sync.options = "-8";
-		val loadClassA = new Sync<Object>(this.getClass().getClassLoader(), classNameA, "org/", "res/src");
-		val loadClassB = new Sync<Object>(this.getClass().getClassLoader(), classNameB, "org/", "res/src");
+		val loadClassA = new Sync<Object>(this.getClass().getClassLoader(), classNameA, "./org", "./res/src/");
+		val loadClassB = new Sync<Object>(this.getClass().getClassLoader(), classNameB, "org", "res/src/");
 		assertSame("This class needs to change", true, loadClassA.isDirty());
 		assertSame("This class needs to change", true, loadClassB.isDirty());
 		List<Sync> list = new ArrayList<Sync>();
@@ -56,6 +57,8 @@ public class SyncTest {
 		list.add(loadClassA);
 		Sync.updateAll(list);
 		System.out.println(list.get(1).getCompileError());
+		System.out.println(list.get(1).getFolderSourceName());
+		System.out.println(list.get(0).getCompileError());
 		assertNotNull("The class has not been loaded", loadClassA.newInstance());
 		assertNotNull("The class has not been loaded", loadClassB.newInstance());
 		assertSame("This class doesn't need to change", false, loadClassA.isDirty());
