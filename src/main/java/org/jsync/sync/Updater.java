@@ -3,6 +3,7 @@ package org.jsync.sync;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jgit.api.Git;
@@ -13,9 +14,17 @@ import org.eclipse.jgit.api.errors.NoFilepatternException;
 import org.eclipse.jgit.api.errors.RefAlreadyExistsException;
 import org.eclipse.jgit.api.errors.RefNotFoundException;
 import org.eclipse.jgit.diff.DiffEntry;
+import org.eclipse.jgit.errors.AmbiguousObjectException;
+import org.eclipse.jgit.errors.IncorrectObjectTypeException;
+import org.eclipse.jgit.errors.RevisionSyntaxException;
 import org.eclipse.jgit.lib.Constants;
+import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevTree;
+import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
+import org.eclipse.jgit.treewalk.TreeWalk;
 
 import lombok.Getter;
 import lombok.val;
@@ -122,5 +131,45 @@ public abstract class Updater {
 	 */
 	public Updater() throws IOException, NoFilepatternException, GitAPIException {
 		this("res", "master");
+	}
+
+	/**
+	 * Get all files currently available
+	 * @return list of files paths
+	 * @throws RevisionSyntaxException
+	 * @throws AmbiguousObjectException
+	 * @throws IncorrectObjectTypeException
+	 * @throws IOException
+	 */
+	public List<String> getFiles()
+			throws RevisionSyntaxException, AmbiguousObjectException, IncorrectObjectTypeException, IOException {
+		List<String> list = new ArrayList<String>();
+		ObjectId head = repository.resolve(Constants.HEAD);
+		if (head == null) {
+			return list;
+		}
+		RevWalk walk = null;
+		TreeWalk treeWalk = null;
+		try {
+			walk = new RevWalk(repository);
+
+			RevCommit commit = walk.parseCommit(head);
+			RevTree tree = commit.getTree();
+
+			treeWalk = new TreeWalk(repository);
+			treeWalk.addTree(tree);
+			treeWalk.setRecursive(true);
+			while (treeWalk.next()) {
+				list.add(treeWalk.getPathString());
+			}
+		}
+		catch(Exception e){
+			throw e;
+		}
+		finally {
+			walk.close();
+			treeWalk.close();
+		}
+		return list;
 	}
 }

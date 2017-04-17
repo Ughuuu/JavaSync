@@ -22,10 +22,12 @@ public class CommiterTest {
 		// check if initial revision is 0
 		val updater = new Commiter(localFolder, localBranch);
 		assertSame(0, updater.getRevision());
+		assertSame(0, updater.getFiles().size());
 
 		// make a null update
 		updater.update();
 		assertSame(0, updater.getRevision());
+		assertSame(0, updater.getFiles().size());
 
 		// make update with 2 files
 		val file1 = new File(localFolder, "README2.MD");
@@ -33,6 +35,7 @@ public class CommiterTest {
 		file1.createNewFile();
 		file2.createNewFile();
 		val update = updater.update();
+		assertSame(2, updater.getFiles().size());
 		assertSame(1, updater.getRevision());
 		assertSame(2, update.size());
 		assertSame(true, update.stream().anyMatch(t -> t.getNewPath().contains("README1.MD")));
@@ -81,6 +84,8 @@ public class CommiterTest {
 		assertSame(4, updater.getRevision());
 		assertSame(0, update9.size());
 		assertSame(0, update9.size());
+		assertSame(1, updater.getFiles().size());
+		assertSame(true, updater.getFiles().stream().anyMatch(t -> t.contains("README_RENAME.MD")));
 	}
 
 	public static boolean deleteDirectory(File directory) {
