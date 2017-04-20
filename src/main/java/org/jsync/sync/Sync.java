@@ -134,7 +134,7 @@ public class Sync<T> {
 	 * @throws Exception
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public static boolean updateAll(List<Sync> syncs) {
+	public static boolean updateAll(Sync[] syncs) {
 		// check if update is needed
 		boolean areDirty = false;
 		for (val sync : syncs) {
@@ -146,7 +146,7 @@ public class Sync<T> {
 			return false;
 		}
 		// check if files exist
-		val first = syncs.get(0);
+		val first = syncs[0];
 		URL url;
 		boolean result = true;
 		for (val sync : syncs) {

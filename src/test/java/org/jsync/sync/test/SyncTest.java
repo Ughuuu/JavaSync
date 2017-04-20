@@ -27,7 +27,7 @@ public class SyncTest {
 	private static final String classNameA = "org.jsync.sync.test.SynceeA";
 	private static final String classNameB = "org.jsync.sync.test.SynceeB";
 
-	private void makeSource(String classFullName, String className) throws IOException{
+	private void makeSource(String classFullName, String className) throws IOException {
 		String fileName = classFullName.replace('.', '/');
 		System.out.println(fileName);
 		File file = new File(fileName);
@@ -35,13 +35,13 @@ public class SyncTest {
 		new File("./res/src/").mkdirs();
 
 		PrintWriter writer = new PrintWriter(file + ".java");
-		writer.print("package org.jsync.sync.test;\n" + "\n" + "public class "+className+"{\n"
+		writer.print("package org.jsync.sync.test;\n" + "\n" + "public class " + className + "{\n"
 				+ "	public final static boolean result = false;\n" + "	\n" + "	public String getResult(){\n"
 				+ "		return \"this was \" + result;\n" + "	}\n" + "}\n");
 		writer.flush();
 		writer.close();
 	}
-	
+
 	@SuppressWarnings("rawtypes")
 	@Test
 	public void testSimpleLoadSync() throws Exception {
@@ -55,7 +55,7 @@ public class SyncTest {
 		List<Sync> list = new ArrayList<Sync>();
 		list.add(loadClassB);
 		list.add(loadClassA);
-		Sync.updateAll(list);
+		Sync.updateAll((Sync[]) list.toArray(new Sync[0]));
 		System.out.println(list.get(1).getCompileError());
 		System.out.println(list.get(1).getFolderSourceName());
 		System.out.println(list.get(0).getCompileError());
@@ -69,11 +69,11 @@ public class SyncTest {
 				loadClassB.newInstance().getClass().getMethod("getResult").invoke(loadClassB.newInstance()));
 		assertSame(classNameA, loadClassA.newInstance().getClass().getName());
 		assertSame(classNameB, loadClassB.newInstance().getClass().getName());
-		
+
 		String fileName = classNameA.replace('.', '/');
 		System.out.println(fileName);
 		File file = new File(fileName);
-		
+
 		PrintWriter writerFinal = new PrintWriter(file + ".java");
 		writerFinal.print("package org.jsync.sync.test;\n" + "\n" + "public class SynceeA{\n"
 				+ "	public final static boolean result = true;\n" + "	\n" + "	public String getResult(){\n"
