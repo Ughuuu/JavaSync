@@ -100,19 +100,15 @@ public class Sync<T> {
 		this.folderSourceName = folderSourceName;
 		this.classFile = new File((className.replace('.', '/') + ".java").toString());
 	}
-	
+
 	/**
 	 * Get the class type.
+	 * 
 	 * @return The class type or null
+	 * @throws ClassNotFoundException
 	 */
-	public Class<?> getClassType(){
-		try {
-			return classLoader.loadClass(className);
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
+	public Class<?> getClassType() throws ClassNotFoundException {
+		return urlClassLoader.loadClass(className);
 	}
 
 	/**
