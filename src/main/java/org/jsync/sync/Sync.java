@@ -170,7 +170,6 @@ public class Sync<T> {
 		val success = BatchCompiler.compile(filesFolder + " -d " + first.folderDestinationName + " -cp "
 				+ System.getProperty("java.class.path") + ";" + first.folderDestinationName + " " + Sync.options,
 				outputStream, errorStream, null);
-		System.out.println(new File(first.folderDestinationName).getAbsolutePath());
 		// handle error for each
 		for (val sync : syncs) {
 			sync.compileError = errorWriter.toString();
@@ -255,7 +254,7 @@ public class Sync<T> {
 			val urlClassLoader = URLClassLoader.newInstance(new URL[] { url }, sync.classLoader);
 			try {
 				sync.checkClass(urlClassLoader);
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				sync.compileError += e.toString();
 				return false;
 			}
