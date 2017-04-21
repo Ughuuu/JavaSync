@@ -44,9 +44,11 @@ public class ManualSyncTest {
 		val loadClass = new Sync<TestInterface>(ManualSyncTest.class.getClassLoader(), className, "org",
 				"res/src/");
 		TestInterface obj;
+		Sync[] arr = new Sync[1];
+		arr[0] = loadClass;
 		while (true) {
-			if (loadClass.isDirty()) {
-				if (Sync.update(loadClass)) {
+			if (loadClass.isSourceDirty()) {
+				if (Sync.updateSource(arr) && Sync.updateClass(arr)) {
 					obj = loadClass.newInstance();
 					String result = obj.getResult();
 					System.out.println(result);

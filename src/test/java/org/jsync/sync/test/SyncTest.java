@@ -50,19 +50,20 @@ public class SyncTest {
 		Sync.options = "-8";
 		val loadClassA = new Sync<Object>(this.getClass().getClassLoader(), classNameA, "./org", "./res/src/");
 		val loadClassB = new Sync<Object>(this.getClass().getClassLoader(), classNameB, "org", "res/src/");
-		assertSame("This class needs to change", true, loadClassA.isDirty());
-		assertSame("This class needs to change", true, loadClassB.isDirty());
+		assertSame("This class needs to change", true, loadClassA.isSourceDirty());
+		assertSame("This class needs to change", true, loadClassB.isSourceDirty());
 		List<Sync> list = new ArrayList<Sync>();
 		list.add(loadClassB);
 		list.add(loadClassA);
-		Sync.updateAll((Sync[]) list.toArray(new Sync[0]));
+		Sync.updateSource((Sync[]) list.toArray(new Sync[0]));
+		Sync.updateClass((Sync[]) list.toArray(new Sync[0]));
 		System.out.println(list.get(1).getCompileError());
 		System.out.println(list.get(1).getFolderSourceName());
 		System.out.println(list.get(0).getCompileError());
 		assertNotNull("The class has not been loaded", loadClassA.newInstance());
 		assertNotNull("The class has not been loaded", loadClassB.newInstance());
-		assertSame("This class doesn't need to change", false, loadClassA.isDirty());
-		assertSame("This class doesn't need to change", false, loadClassB.isDirty());
+		assertSame("This class doesn't need to change", false, loadClassA.isSourceDirty());
+		assertSame("This class doesn't need to change", false, loadClassB.isSourceDirty());
 		assertSame("this was false",
 				loadClassA.newInstance().getClass().getMethod("getResult").invoke(loadClassA.newInstance()));
 		assertSame("this was false",
@@ -80,10 +81,6 @@ public class SyncTest {
 				+ "		return \"this was \" + result;\n" + "	}\n" + "}\n");
 		writerFinal.flush();
 		writerFinal.close();
-		assertSame("This class needs to change", true, loadClassA.isDirty());
-		System.out.println(Sync.update(loadClassA));
-
-		assertSame("this was true",
-				loadClassA.newInstance().getClass().getMethod("getResult").invoke(loadClassA.newInstance()));
+		assertSame("This class needs to change", true, loadClassA.isSourceDirty());
 	}
 }

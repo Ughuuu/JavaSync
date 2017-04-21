@@ -25,10 +25,16 @@ public class Sync<T> {
 	private final String className;
 
 	/**
-	 * An instance of file for the class given by the class name. It has .java
+	 * An instance of file for the class given by the class name. It has .class
 	 * at the end and is located at the source folder.
 	 */
 	private final File classFile;
+
+	/**
+	 * An instance of file for the class given by the class name. It has .java
+	 * at the end and is located at the source folder.
+	 */
+	private final File javaFile;
 
 	/**
 	 * The source folder of the class. This is relative to the root project.
@@ -98,7 +104,8 @@ public class Sync<T> {
 		this.classLoader = classLoader;
 		this.folderDestinationName = folderDestinationName;
 		this.folderSourceName = folderSourceName;
-		this.classFile = new File((className.replace('.', '/') + ".java").toString());
+		this.classFile = new File((className.replace('.', '/') + ".class").toString());
+		this.javaFile = new File((className.replace('.', '/') + ".java").toString());
 	}
 
 	/**
@@ -125,12 +132,29 @@ public class Sync<T> {
 		}
 	}
 
+	public boolean hasSource() {
+		return javaFile.exists();
+	}
+
+	public boolean hasClassFile() {
+		return classFile.exists();
+	}
+
 	/**
 	 * Checks if the source file has been modified
 	 * 
 	 * @return The modified state
 	 */
-	public boolean isDirty() {
+	public boolean isSourceDirty() {
+		return javaFile.lastModified() != lastCompiled || lastCompiled == 0;
+	}
+
+	/**
+	 * Checks if the source file has been modified
+	 * 
+	 * @return The modified state
+	 */
+	public boolean isClassDirty() {
 		return classFile.lastModified() != lastCompiled || lastCompiled == 0;
 	}
 
@@ -144,24 +168,23 @@ public class Sync<T> {
 	 * @throws Exception
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public static boolean updateAll(Sync[] syncs) {
+	public static boolean updateSource(Sync[] syncs) {
 		// check if update is needed
 		boolean areDirty = false;
 		for (val sync : syncs) {
 			sync.compileError = "";
 			sync.compileOutput = "";
-			areDirty = areDirty | sync.isDirty();
+			areDirty = areDirty | sync.isSourceDirty();
 		}
 		if (!areDirty) {
 			return false;
 		}
 		// check if files exist
 		val first = syncs[0];
-		URL url;
 		boolean result = true;
 		for (val sync : syncs) {
-			if (!sync.classFile.exists() || sync.classFile.isDirectory()) {
-				sync.compileError += "Cannot find file: " + sync.classFile.getPath() + '\n';
+			if (!sync.javaFile.exists() || sync.javaFile.isDirectory()) {
+				sync.compileError += "Cannot find file: " + sync.javaFile.getPath() + '\n';
 				result = false;
 			}
 		}
@@ -169,7 +192,7 @@ public class Sync<T> {
 			return false;
 		}
 		for (val sync : syncs) {
-			sync.lastCompiled = sync.classFile.lastModified();
+			sync.lastCompiled = sync.javaFile.lastModified();
 		}
 		String filesFolder = first.folderSourceName;
 
@@ -185,7 +208,14 @@ public class Sync<T> {
 			sync.compileError = errorWriter.toString();
 			sync.compileOutput = outputWriter.toString();
 		}
-		if ("".equals(errorWriter.toString()) && success) {
+		return "".equals(errorWriter.toString());
+	}
+
+	public static boolean updateClass(Sync[] syncs) {
+		val first = syncs[0];
+		URL url;
+		boolean result = true;
+		if ("".equals(first.compileError.toString())) {
 			// check if generated classes exists
 			try {
 				File root = new File(first.folderDestinationName);
@@ -211,66 +241,10 @@ public class Sync<T> {
 					result = false;
 				}
 			}
-			return result;
+		} else {
+			result = false;
 		}
-		return false;
-	}
-
-	/**
-	 * Update the given class. If it depends on other classes, use updateAll.
-	 * 
-	 * @param sync
-	 *            The sync classes, all in the same root folder.
-	 * @return If the compilation succeeded and changes happened.
-	 * @throws Exception
-	 */
-	public static <T> boolean update(Sync<T> sync) {
-		sync.compileError = "";
-		sync.compileOutput = "";
-		if (!sync.isDirty()) {
-			return false;
-		}
-		// check if file exist
-		try {
-			if (!sync.classFile.exists() || sync.classFile.isDirectory()) {
-				sync.compileError += "Cannot find file: " + sync.classFile.getPath() + '\n';
-				return false;
-			}
-		} catch (Exception e) {
-			sync.compileError += e.toString();
-			return false;
-		}
-		sync.lastCompiled = sync.classFile.lastModified();
-
-		val errorWriter = new StringWriter();
-		val outputWriter = new StringWriter();
-		val errorStream = new PrintWriter(errorWriter);
-		val outputStream = new PrintWriter(outputWriter);
-		val compileCommand = (sync.className.replace('.', '/') + ".java").toString() + " -d "
-				+ sync.folderDestinationName + " -cp " + System.getProperty("java.class.path") + ";"
-				+ sync.folderDestinationName + " " + Sync.options;
-		val success = BatchCompiler.compile(compileCommand, outputStream, errorStream, null);
-		sync.compileError = errorWriter.toString();
-		sync.compileOutput = outputWriter.toString();
-		if ("".equals(sync.compileError) && success) {
-			URL url;
-			try {
-				File root = new File(sync.folderDestinationName);
-				url = root.toURI().toURL();
-			} catch (Exception e) {
-				sync.compileError += e.toString();
-				return false;
-			}
-			val urlClassLoader = URLClassLoader.newInstance(new URL[] { url }, sync.classLoader);
-			try {
-				sync.checkClass(urlClassLoader);
-			} catch (Throwable e) {
-				sync.compileError += e.toString();
-				return false;
-			}
-			return true;
-		}
-		return false;
+		return result;
 	}
 
 	private void checkClass(URLClassLoader newClassLoader) throws Exception {
