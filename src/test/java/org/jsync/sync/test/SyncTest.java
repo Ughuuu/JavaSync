@@ -11,8 +11,9 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jsync.sync.ClassSync;
 import org.jsync.sync.Commiter;
-import org.jsync.sync.Sync;
+import org.jsync.sync.SourceSync;
 import org.junit.Test;
 
 import lombok.val;
@@ -42,34 +43,36 @@ public class SyncTest {
 		writer.close();
 	}
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Test
 	public void testSimpleLoadSync() throws Exception {
 		makeSource(classNameA, "SynceeA");
 		makeSource(classNameB, "SynceeB");
-		Sync.options = "-8";
-		val loadClassA = new Sync<Object>(this.getClass().getClassLoader(), classNameA, "./org", "./res/src/");
-		val loadClassB = new Sync<Object>(this.getClass().getClassLoader(), classNameB, "org", "res/src/");
-		assertSame("This class needs to change", true, loadClassA.isSourceDirty());
-		assertSame("This class needs to change", true, loadClassB.isSourceDirty());
-		List<Sync> list = new ArrayList<Sync>();
-		list.add(loadClassB);
-		list.add(loadClassA);
-		Sync.updateSource((Sync[]) list.toArray(new Sync[0]));
-		Sync.updateClass((Sync[]) list.toArray(new Sync[0]));
-		System.out.println(list.get(1).getCompileError());
-		System.out.println(list.get(1).getFolderSourceName());
-		System.out.println(list.get(0).getCompileError());
-		assertNotNull("The class has not been loaded", loadClassA.newInstance());
-		assertNotNull("The class has not been loaded", loadClassB.newInstance());
-		assertSame("This class doesn't need to change", false, loadClassA.isSourceDirty());
-		assertSame("This class doesn't need to change", false, loadClassB.isSourceDirty());
+		SourceSync.options = "-8";
+		val sourceClassA = new SourceSync(classNameA, "./org", "./res/src/");
+		val sourceClassB = new SourceSync(classNameB, "./org", "./res/src/");
+		val classA = new ClassSync(this.getClass().getClassLoader(), classNameA, "./res/src/");
+		val classB = new ClassSync(this.getClass().getClassLoader(), classNameB, "./res/src/");
+		assertSame("This class needs to change", true, sourceClassA.isSourceDirty());
+		assertSame("This class needs to change", true, sourceClassB.isSourceDirty());
+		List<SourceSync> listSource = new ArrayList<SourceSync>();
+		listSource.add(sourceClassA);
+		listSource.add(sourceClassB);
+		List<ClassSync> listClass = new ArrayList<ClassSync>();
+		listClass.add(classA);
+		listClass.add(classB);
+		SourceSync.updateSource(listSource.toArray(new SourceSync[0]));
+		ClassSync.updateClass(listClass.toArray(new ClassSync[0]));
+		assertNotNull("The class has not been loaded", classA.newInstance());
+		assertNotNull("The class has not been loaded", classB.newInstance());
+		assertSame("This class doesn't need to change", false, sourceClassA.isSourceDirty());
+		assertSame("This class doesn't need to change", false, sourceClassB.isSourceDirty());
 		assertSame("this was false",
-				loadClassA.newInstance().getClass().getMethod("getResult").invoke(loadClassA.newInstance()));
+				classA.newInstance().getClass().getMethod("getResult").invoke(classA.newInstance()));
 		assertSame("this was false",
-				loadClassB.newInstance().getClass().getMethod("getResult").invoke(loadClassB.newInstance()));
-		assertSame(classNameA, loadClassA.newInstance().getClass().getName());
-		assertSame(classNameB, loadClassB.newInstance().getClass().getName());
+				classB.newInstance().getClass().getMethod("getResult").invoke(classB.newInstance()));
+		assertSame(classNameA, classA.newInstance().getClass().getName());
+		assertSame(classNameB, classB.newInstance().getClass().getName());
 
 		String fileName = classNameA.replace('.', '/');
 		System.out.println(fileName);
@@ -81,6 +84,6 @@ public class SyncTest {
 				+ "		return \"this was \" + result;\n" + "	}\n" + "}\n");
 		writerFinal.flush();
 		writerFinal.close();
-		assertSame("This class needs to change", true, loadClassA.isSourceDirty());
+		assertSame("This class needs to change", true, sourceClassA.isSourceDirty());
 	}
 }
