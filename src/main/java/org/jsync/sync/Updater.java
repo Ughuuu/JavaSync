@@ -43,50 +43,17 @@ public abstract class Updater {
 	protected final String branch;
 	protected final Repository repository;
 
-	protected void initialCommit() throws NoFilepatternException, GitAPIException {
-		git.add().addFilepattern(".").call();
-		git.commit().setMessage("0").call();
+	/**
+	 * Create a new Updater with the path set to the res folder, which is
+	 * default
+	 * 
+	 * @throws IOException
+	 * @throws NoFilepatternException
+	 * @throws GitAPIException
+	 */
+	public Updater() throws IOException, NoFilepatternException, GitAPIException {
+		this("res", "master");
 	}
-
-	public int getRevision() throws IOException {
-		val head = repository.resolve(Constants.HEAD);
-		
-		if(head == null)
-			return 0;
-
-		val stream = new ByteArrayOutputStream();
-		repository.open(head).copyTo(stream);
-
-		val lastCommit = stream.toString("UTF-8");
-		val lastIndex = lastCommit.substring(lastCommit.lastIndexOf('\n') + 1);
-
-		int lastIndexInt = 0;
-
-		try {
-			lastIndexInt = Integer.valueOf(lastIndex);
-		} catch (Exception e) {
-			// if this happens, reset index to 0
-		}
-		return lastIndexInt;
-	}
-
-	public void clean() throws RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException,
-			CheckoutConflictException, GitAPIException, IOException {
-		// delete the copy branch if it exists
-		try {
-			git.branchDelete().setBranchNames("copy").setForce(true).call();
-		} catch (Exception e) {
-			e.printStackTrace();
-			// if branch doesn't exist, continue.
-		}
-		git.checkout().setName("copy").setOrphan(true).call();
-		git.branchDelete().setBranchNames(branch).setForce(true).call();
-		// this will be an initial commit
-		initialCommit();
-		git.branchRename().setOldName("copy").setNewName(branch).call();
-	}
-
-	public abstract List<DiffEntry> update() throws NoFilepatternException, GitAPIException, IOException;
 
 	/**
 	 * Create a new Updater with the given local path.
@@ -121,16 +88,20 @@ public abstract class Updater {
 		}
 	}
 
-	/**
-	 * Create a new Updater with the path set to the res folder, which is
-	 * default
-	 * 
-	 * @throws IOException
-	 * @throws NoFilepatternException
-	 * @throws GitAPIException
-	 */
-	public Updater() throws IOException, NoFilepatternException, GitAPIException {
-		this("res", "master");
+	public void clean() throws RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException,
+			CheckoutConflictException, GitAPIException, IOException {
+		// delete the copy branch if it exists
+		try {
+			git.branchDelete().setBranchNames("copy").setForce(true).call();
+		} catch (Exception e) {
+			e.printStackTrace();
+			// if branch doesn't exist, continue.
+		}
+		git.checkout().setName("copy").setOrphan(true).call();
+		git.branchDelete().setBranchNames(branch).setForce(true).call();
+		// this will be an initial commit
+		initialCommit();
+		git.branchRename().setOldName("copy").setNewName(branch).call();
 	}
 
 	/**
@@ -171,5 +142,34 @@ public abstract class Updater {
 			treeWalk.close();
 		}
 		return list;
+	}
+
+	public int getRevision() throws IOException {
+		val head = repository.resolve(Constants.HEAD);
+		
+		if(head == null)
+			return 0;
+
+		val stream = new ByteArrayOutputStream();
+		repository.open(head).copyTo(stream);
+
+		val lastCommit = stream.toString("UTF-8");
+		val lastIndex = lastCommit.substring(lastCommit.lastIndexOf('\n') + 1);
+
+		int lastIndexInt = 0;
+
+		try {
+			lastIndexInt = Integer.valueOf(lastIndex);
+		} catch (Exception e) {
+			// if this happens, reset index to 0
+		}
+		return lastIndexInt;
+	}
+
+	public abstract List<DiffEntry> update() throws NoFilepatternException, GitAPIException, IOException;
+
+	protected void initialCommit() throws NoFilepatternException, GitAPIException {
+		git.add().addFilepattern(".").call();
+		git.commit().setMessage("0").call();
 	}
 }

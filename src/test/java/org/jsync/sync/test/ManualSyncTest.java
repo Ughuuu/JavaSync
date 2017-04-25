@@ -2,11 +2,8 @@ package org.jsync.sync.test;
 
 import java.io.File;
 import java.io.PrintWriter;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 import org.jsync.sync.ClassSync;
-import org.jsync.sync.Commiter;
 import org.jsync.sync.SourceSync;
 
 import lombok.val;

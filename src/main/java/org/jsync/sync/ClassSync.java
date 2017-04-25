@@ -1,13 +1,8 @@
 package org.jsync.sync;
 
 import java.io.File;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.List;
-
-import org.eclipse.jdt.core.compiler.batch.BatchCompiler;
 
 import lombok.Getter;
 import lombok.val;
@@ -17,6 +12,31 @@ import lombok.val;
  * changes. If that happens, the class is recompiled.
  */
 public class ClassSync<T> {
+	public static <T> boolean updateClass(ClassSync<T>[] syncs) {
+		val first = syncs[0];
+		URL url;
+		boolean result = true;
+		try {
+			File root = new File(first.folderDestinationName);
+			if (!root.exists() || !root.isDirectory()) {
+				return false;
+			}
+			url = root.toURI().toURL();
+		} catch (Exception e) {
+			return false;
+		}
+		val urlClassLoader = URLClassLoader.newInstance(new URL[] { url }, first.classLoader);
+		for (val sync : syncs) {
+			try {
+				sync.checkClass(urlClassLoader);
+				sync.lastSynced = sync.classFile.lastModified();
+			} catch (Exception e) {
+				result = false;
+			}
+		}
+		return result;
+	}
+
 	/**
 	 * The full name of the class, with the package. The package contains
 	 * dots(.) and the class and package are united by a dot(.) as well.
@@ -42,8 +62,8 @@ public class ClassSync<T> {
 	 */
 	@Getter
 	private long lastSynced;
-
 	private URLClassLoader urlClassLoader;
+
 	private final ClassLoader classLoader;
 
 	/**
@@ -66,7 +86,7 @@ public class ClassSync<T> {
 		this.className = className;
 		this.classLoader = classLoader;
 		this.folderDestinationName = folderDestinationName;
-		this.classFile = new File((className.replace('.', '/') + ".class").toString());
+		this.classFile = new File(folderDestinationName + (className.replace('.', '/') + ".class").toString());
 	}
 
 	/**
@@ -77,20 +97,6 @@ public class ClassSync<T> {
 	 */
 	public Class<?> getClassType() throws ClassNotFoundException {
 		return urlClassLoader.loadClass(className);
-	}
-
-	/**
-	 * Get a new instance of the class or null
-	 * 
-	 * @return A new instance or null.
-	 */
-	@SuppressWarnings("unchecked")
-	public T newInstance() {
-		try {
-			return (T) urlClassLoader.loadClass(className).newInstance();
-		} catch (Exception e) {
-			return null;
-		}
 	}
 
 	public boolean hasClassFile() {
@@ -106,29 +112,18 @@ public class ClassSync<T> {
 		return classFile.lastModified() != lastSynced || lastSynced == 0;
 	}
 
-	public static <T> boolean updateClass(ClassSync<T>[] syncs) {
-		val first = syncs[0];
-		URL url;
-		boolean result = true;
+	/**
+	 * Get a new instance of the class or null
+	 * 
+	 * @return A new instance or null.
+	 */
+	@SuppressWarnings("unchecked")
+	public T newInstance() {
 		try {
-			File root = new File(first.folderDestinationName);
-			if (!root.exists() || !root.isDirectory()) {
-				return false;
-			}
-			url = root.toURI().toURL();
+			return (T) urlClassLoader.loadClass(className).newInstance();
 		} catch (Exception e) {
-			return false;
+			return null;
 		}
-		val urlClassLoader = URLClassLoader.newInstance(new URL[] { url }, first.classLoader);
-		for (val sync : syncs) {
-			try {
-				sync.checkClass(urlClassLoader);
-				sync.lastSynced = sync.classFile.lastModified();
-			} catch (Exception e) {
-				result = false;
-			}
-		}
-		return result;
 	}
 
 	private void checkClass(URLClassLoader newClassLoader) throws Exception {

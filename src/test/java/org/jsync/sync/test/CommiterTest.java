@@ -15,6 +15,24 @@ public class CommiterTest {
 	private static final String localFolder = "test";
 	private static final String localBranch = "test";
 
+	public static boolean deleteDirectory(File directory) {
+		if (directory.exists()) {
+			File[] files = directory.listFiles();
+			if (null != files) {
+				for (int i = 0; i < files.length; i++) {
+					if (files[i].isDirectory()) {
+						deleteDirectory(files[i]);
+					} else {
+						files[i].delete();
+					}
+				}
+			}
+		} else {
+			return true;
+		}
+		return (directory.delete());
+	}
+
 	@Test
 	public void testWorkspace() throws Exception {
 		// first delete the folder if it already exists
@@ -86,23 +104,5 @@ public class CommiterTest {
 		assertSame(0, update9.size());
 		assertSame(1, updater.getFiles().size());
 		assertSame(true, updater.getFiles().stream().anyMatch(t -> t.contains("README_RENAME.MD")));
-	}
-
-	public static boolean deleteDirectory(File directory) {
-		if (directory.exists()) {
-			File[] files = directory.listFiles();
-			if (null != files) {
-				for (int i = 0; i < files.length; i++) {
-					if (files[i].isDirectory()) {
-						deleteDirectory(files[i]);
-					} else {
-						files[i].delete();
-					}
-				}
-			}
-		} else {
-			return true;
-		}
-		return (directory.delete());
 	}
 }

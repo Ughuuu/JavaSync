@@ -27,6 +27,7 @@ public class Puller extends Updater {
 		this.remote = remote;
 	}
 
+	@Override
 	public List<DiffEntry> update() throws NoFilepatternException, GitAPIException, IOException {
 		val oldHead = repository.resolve(Constants.HEAD);
 		git.pull().setRemote(remote).call();

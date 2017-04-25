@@ -6,13 +6,10 @@ import static org.junit.Assert.assertSame;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.jsync.sync.ClassSync;
-import org.jsync.sync.Commiter;
 import org.jsync.sync.SourceSync;
 import org.junit.Test;
 
@@ -27,21 +24,6 @@ import lombok.val;
 public class SyncTest {
 	private static final String classNameA = "org.jsync.sync.test.SynceeA";
 	private static final String classNameB = "org.jsync.sync.test.SynceeB";
-
-	private void makeSource(String classFullName, String className) throws IOException {
-		String fileName = classFullName.replace('.', '/');
-		System.out.println(fileName);
-		File file = new File(fileName);
-		file.mkdirs();
-		new File("./res/src/").mkdirs();
-
-		PrintWriter writer = new PrintWriter(file + ".java");
-		writer.print("package org.jsync.sync.test;\n" + "\n" + "public class " + className + "{\n"
-				+ "	public final static boolean result = false;\n" + "	\n" + "	public String getResult(){\n"
-				+ "		return \"this was \" + result;\n" + "	}\n" + "}\n");
-		writer.flush();
-		writer.close();
-	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Test
@@ -85,5 +67,20 @@ public class SyncTest {
 		writerFinal.flush();
 		writerFinal.close();
 		assertSame("This class needs to change", true, sourceClassA.isSourceDirty());
+	}
+
+	private void makeSource(String classFullName, String className) throws IOException {
+		String fileName = classFullName.replace('.', '/');
+		System.out.println(fileName);
+		File file = new File(fileName);
+		file.mkdirs();
+		new File("./res/src/").mkdirs();
+
+		PrintWriter writer = new PrintWriter(file + ".java");
+		writer.print("package org.jsync.sync.test;\n" + "\n" + "public class " + className + "{\n"
+				+ "	public final static boolean result = false;\n" + "	\n" + "	public String getResult(){\n"
+				+ "		return \"this was \" + result;\n" + "	}\n" + "}\n");
+		writer.flush();
+		writer.close();
 	}
 }
