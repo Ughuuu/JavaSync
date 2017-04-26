@@ -1,6 +1,7 @@
 package org.jsync.sync;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 
@@ -30,7 +31,7 @@ public class ClassSync<T> {
 			try {
 				sync.checkClass(urlClassLoader);
 				sync.lastSynced = sync.classFile.lastModified();
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				result = false;
 			}
 		}
@@ -126,7 +127,7 @@ public class ClassSync<T> {
 		}
 	}
 
-	private void checkClass(URLClassLoader newClassLoader) throws Exception {
+	private void checkClass(URLClassLoader newClassLoader) throws ClassNotFoundException, IOException {
 		newClassLoader.loadClass(className);
 		if (urlClassLoader != null)
 			urlClassLoader.close();
