@@ -64,11 +64,11 @@ public class ClassSync<T> {
 	 */
 	@Getter
 	private long lastSynced;
-	@Getter
-	@Setter
 	private URLClassLoader urlClassLoader;
 
-	private final ClassLoader classLoader;
+	@Getter
+	@Setter
+	private ClassLoader classLoader;
 
 	/**
 	 * Construct a new Sync object for the specified className.
