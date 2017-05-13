@@ -6,6 +6,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 
 import lombok.Getter;
+import lombok.Setter;
 import lombok.val;
 
 /**
@@ -63,6 +64,8 @@ public class ClassSync<T> {
 	 */
 	@Getter
 	private long lastSynced;
+	@Getter
+	@Setter
 	private URLClassLoader urlClassLoader;
 
 	private final ClassLoader classLoader;
