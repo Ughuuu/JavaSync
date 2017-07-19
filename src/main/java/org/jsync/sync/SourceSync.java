@@ -19,6 +19,8 @@ public class SourceSync {
 	 */
 	public static String options = "";
 
+	public String libsFolder = "";
+
 	/**
 	 * Update all the given classes at once. They should be from the same folder as
 	 * source and have the same destination folder and the same options.
@@ -60,10 +62,12 @@ public class SourceSync {
 		val outputWriter = new StringWriter();
 		val errorStream = new PrintWriter(errorWriter);
 		val outputStream = new PrintWriter(outputWriter);
-		val success = BatchCompiler.compile(
-				filesFolder + " -d " + first.folderDestinationName + " -cp " + System.getProperty("java.class.path")
-						+ ";" + first.folderDestinationName + ";" + first.folderSourceName + " " + SourceSync.options,
-				outputStream, errorStream, null);
+		val success = BatchCompiler
+				.compile(
+						filesFolder + " -d " + first.folderDestinationName + " -cp "
+								+ System.getProperty("java.class.path") + ";" + first.folderDestinationName + ";"
+								+ first.folderSourceName + ";" + first.libsFolder + " " + SourceSync.options,
+						outputStream, errorStream, null);
 		// handle error for each
 		for (val sync : syncs) {
 			sync.compileError = errorWriter.toString();
