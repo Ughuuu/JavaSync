@@ -5,14 +5,15 @@ import static org.junit.Assert.assertSame;
 import java.io.File;
 
 import org.jsync.sync.Puller;
+import org.junit.Test;
 
 import lombok.val;
 
 public class PullerTest {
 
-	private static final String localFolder = "test";
-	private static final String localBranch = "test";
-	private static final String remote = "https://github.com/Ughuuu/JavaSync.git";
+	private static final String localFolder = "testPull3";
+	private static final String localBranch = "master";
+	private static final String remote = "https://github.com/Ughuuu/TestGameAssets.git";
 
 	public static boolean deleteDirectory(File directory) {
 		if (directory.exists()) {
@@ -32,6 +33,7 @@ public class PullerTest {
 		return (directory.delete());
 	}
 
+	@Test
 	public void testWorkspace() throws Exception {
 		// first delete the folder if it already exists
 		assertSame(true, deleteDirectory(new File(localFolder)));
@@ -40,6 +42,6 @@ public class PullerTest {
 		assertSame(0, updater.getRevision());
 
 		updater.update();
-		assertSame(1, updater.getRevision());
+		assertSame(2, updater.getRevision());
 	}
 }

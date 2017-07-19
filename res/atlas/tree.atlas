@@ -1,0 +1,41 @@
+
+tree.png
+size: 512,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+tree
+  rotate: false
+  xy: 2, 555
+  size: 265, 380
+  orig: 265, 380
+  offset: 0, 0
+  index: 3
+tree
+  rotate: false
+  xy: 2, 280
+  size: 286, 273
+  orig: 286, 273
+  offset: 0, 0
+  index: 1
+tree
+  rotate: false
+  xy: 2, 5
+  size: 259, 273
+  orig: 259, 273
+  offset: 0, 0
+  index: 0
+tree
+  rotate: false
+  xy: 269, 687
+  size: 73, 248
+  orig: 73, 248
+  offset: 0, 0
+  index: 2
+tree
+  rotate: false
+  xy: 263, 2
+  size: 243, 276
+  orig: 243, 276
+  offset: 0, 0
+  index: 4

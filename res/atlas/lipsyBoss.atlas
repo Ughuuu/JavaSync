@@ -1,0 +1,20 @@
+
+lipsyBoss.png
+size: 2048,512
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+lipsy
+  rotate: false
+  xy: 2, 50
+  size: 600, 397
+  orig: 600, 397
+  offset: 0, 0
+  index: 1
+lipsy
+  rotate: false
+  xy: 604, 2
+  size: 474, 445
+  orig: 474, 445
+  offset: 0, 0
+  index: 0

@@ -1,0 +1,1287 @@
+[ {
+  "name" : "camera",
+  "components" : [ [ "game.component.OverlayScript", {
+    "enable" : true
+  } ], [ "com.gemengine.component.base.PointComponent", {
+    "enable" : true,
+    "position" : {
+      "x" : 0.0,
+      "y" : 0.0,
+      "z" : 0.0
+    },
+    "rotation" : {
+      "x" : 0.0,
+      "y" : 0.0,
+      "z" : 0.0
+    },
+    "scale" : {
+      "x" : 1.0,
+      "y" : 1.0,
+      "z" : 1.0
+    }
+  } ], [ "com.gemengine.component.twod.CameraComponent", {
+    "enable" : true,
+    "priority" : 0,
+    "resizeable" : true,
+    "fov" : -1.0,
+    "width" : 640,
+    "height" : 480,
+    "viewportType" : "Screen"
+  } ] ],
+  "parent" : null
+}, {
+  "name" : "uiCamera",
+  "components" : [ [ "game.component.OverlayScript", {
+    "enable" : true
+  } ], [ "com.gemengine.component.base.PointComponent", {
+    "enable" : true,
+    "position" : {
+      "x" : 0.0,
+      "y" : 0.0,
+      "z" : 0.0
+    },
+    "rotation" : {
+      "x" : 0.0,
+      "y" : 0.0,
+      "z" : 0.0
+    },
+    "scale" : {
+      "x" : 1.0,
+      "y" : 1.0,
+      "z" : 1.0
+    }
+  } ], [ "com.gemengine.component.twod.CameraComponent", {
+    "enable" : true,
+    "priority" : 0,
+    "resizeable" : true,
+    "fov" : -1.0,
+    "width" : 640,
+    "height" : 480,
+    "viewportType" : "Screen"
+  } ] ],
+  "parent" : null
+}, {
+  "name" : "E0",
+  "components" : [ [ "game.component.OverlayScript", {
+    "enable" : true
+  } ], [ "com.gemengine.component.PointComponent2", {
+    "enable" : true,
+    "position" : {
+      "x" : 317.24316,
+      "y" : 211.09038,
+      "z" : 0.0
+    },
+    "rotation" : {
+      "x" : 0.0,
+      "y" : 0.0,
+      "z" : -389.5174
+    },
+    "scale" : {
+      "x" : 0.2,
+      "y" : 0.2,
+      "z" : 0.2
+    }
+  } ], [ "com.gemengine.component.twod.SpriteAtlasComponent", {
+    "enable" : true,
+    "priority" : 0,
+    "texturePath" : "assets/atlas/lipsyBoss.atlas",
+    "name" : "lipsy",
+    "frame" : 0
+  } ], [ "game.component.AutoScript", {
+    "enable" : true,
+    "dir" : {
+      "x" : -0.16164008,
+      "y" : -0.45573834,
+      "z" : 0.0
+    },
+    "frame" : 3.0
+  } ] ],
+  "parent" : "camera"
+}, {
+  "name" : "overlay_E0",
+  "components" : [ [ "com.gemengine.component.twod.LabelComponent", {
+    "enable" : true,
+    "priority" : 0,
+    "fontPath" : "assets/font/roboto_regular.fnt",
+    "text" : "E0",
+    "fontScale" : 0.4,
+    "wrap" : false,
+    "offsetX" : 0.0,
+    "offsetY" : 89.0,
+    "halign" : 1
+  } ], [ "com.gemengine.component.base.PointComponent", {
+    "enable" : true,
+    "position" : {
+      "x" : 317.76486,
+      "y" : 211.82585,
+      "z" : 0.0
+    },
+    "rotation" : {
+      "x" : 0.0,
+      "y" : 0.0,
+      "z" : 0.0
+    },
+    "scale" : {
+      "x" : 1.0,
+      "y" : 1.0,
+      "z" : 1.0
+    }
+  } ] ],
+  "parent" : "camera"
+}, {
+  "name" : "E1",
+  "components" : [ [ "game.component.OverlayScript", {
+    "enable" : true
+  } ], [ "com.gemengine.component.PointComponent2", {
+    "enable" : true,
+    "position" : {
+      "x" : 521.12866,
+      "y" : 307.66275,
+      "z" : 0.0
+    },
+    "rotation" : {
+      "x" : 0.0,
+      "y" : 0.0,
+      "z" : -436.06415
+    },
+    "scale" : {
+      "x" : 0.2,
+      "y" : 0.2,
+      "z" : 0.2
+    }
+  } ], [ "com.gemengine.component.twod.SpriteAtlasComponent", {
+    "enable" : true,
+    "priority" : 0,
+    "texturePath" : "assets/atlas/lipsyBoss.atlas",
+    "name" : "lipsy",
+    "frame" : 1
+  } ], [ "game.component.AutoScript", {
+    "enable" : true,
+    "dir" : {
+      "x" : -0.2720125,
+      "y" : -0.12065357,
+      "z" : 0.0
+    },
+    "frame" : 39.0
+  } ] ],
+  "parent" : "camera"
+}, {
+  "name" : "overlay_E1",
+  "components" : [ [ "com.gemengine.component.twod.LabelComponent", {
+    "enable" : true,
+    "priority" : 0,
+    "fontPath" : "assets/font/roboto_regular.fnt",
+    "text" : "E1",
+    "fontScale" : 0.4,
+    "wrap" : false,
+    "offsetX" : 0.0,
+    "offsetY" : 79.4,
+    "halign" : 1
+  } ], [ "com.gemengine.component.base.PointComponent", {
+    "enable" : true,
+    "position" : {
+      "x" : 522.0066,
+      "y" : 307.85745,
+      "z" : 0.0
+    },
+    "rotation" : {
+      "x" : 0.0,
+      "y" : 0.0,
+      "z" : 0.0
+    },
+    "scale" : {
+      "x" : 1.0,
+      "y" : 1.0,
+      "z" : 1.0
+    }
+  } ] ],
+  "parent" : "camera"
+}, {
+  "name" : "E2",
+  "components" : [ [ "game.component.OverlayScript", {
+    "enable" : true
+  } ], [ "com.gemengine.component.PointComponent2", {
+    "enable" : true,
+    "position" : {
+      "x" : 637.83,
+      "y" : 299.54095,
+      "z" : 0.0
+    },
+    "rotation" : {
+      "x" : 0.0,
+      "y" : 0.0,
+      "z" : -228.49307
+    },
+    "scale" : {
+      "x" : 0.2,
+      "y" : 0.2,
+      "z" : 0.2
+    }
+  } ], [ "com.gemengine.component.twod.SpriteAtlasComponent", {
+    "enable" : true,
+    "priority" : 0,
+    "texturePath" : "assets/atlas/lipsyBoss.atlas",
+    "name" : "lipsy",
+    "frame" : 0
+  } ], [ "game.component.AutoScript", {
+    "enable" : true,
+    "dir" : {
+      "x" : 0.07916661,
+      "y" : 0.099569306,
+      "z" : 0.0
+    },
+    "frame" : 28.0
+  } ] ],
+  "parent" : "camera"
+}, {
+  "name" : "overlay_E2",
+  "components" : [ [ "com.gemengine.component.twod.LabelComponent", {
+    "enable" : true,
+    "priority" : 0,
+    "fontPath" : "assets/font/roboto_regular.fnt",
+    "text" : "E2",
+    "fontScale" : 0.4,
+    "wrap" : false,
+    "offsetX" : 0.0,
+    "offsetY" : 89.0,
+    "halign" : 1
+  } ], [ "com.gemengine.component.base.PointComponent", {
+    "enable" : true,
+    "position" : {
+      "x" : 637.5745,
+      "y" : 299.38028,
+      "z" : 0.0
+    },
+    "rotation" : {
+      "x" : 0.0,
+      "y" : 0.0,
+      "z" : 0.0
+    },
+    "scale" : {
+      "x" : 1.0,
+      "y" : 1.0,
+      "z" : 1.0
+    }
+  } ] ],
+  "parent" : "camera"
+}, {
+  "name" : "E3",
+  "components" : [ [ "game.component.OverlayScript", {
+    "enable" : true
+  } ], [ "com.gemengine.component.PointComponent2", {
+    "enable" : true,
+    "position" : {
+      "x" : 178.1253,
+      "y" : 353.3322,
+      "z" : 0.0
+    },
+    "rotation" : {
+      "x" : 0.0,
+      "y" : 0.0,
+      "z" : -412.88098
+    },
+    "scale" : {
+      "x" : 0.2,
+      "y" : 0.2,
+      "z" : 0.2
+    }
+  } ], [ "com.gemengine.component.twod.SpriteAtlasComponent", {
+    "enable" : true,
+    "priority" : 0,
+    "texturePath" : "assets/atlas/lipsyBoss.atlas",
+    "name" : "lipsy",
+    "frame" : 0
+  } ], [ "game.component.AutoScript", {
+    "enable" : true,
+    "dir" : {
+      "x" : -0.4355921,
+      "y" : -0.46884498,
+      "z" : 0.0
+    },
+    "frame" : 3.0
+  } ] ],
+  "parent" : "camera"
+}, {
+  "name" : "overlay_E3",
+  "components" : [ [ "com.gemengine.component.twod.LabelComponent", {
+    "enable" : true,
+    "priority" : 0,
+    "fontPath" : "assets/font/roboto_regular.fnt",
+    "text" : "E3",
+    "fontScale" : 0.4,
+    "wrap" : false,
+    "offsetX" : 0.0,
+    "offsetY" : 89.0,
+    "halign" : 1
+  } ], [ "com.gemengine.component.base.PointComponent", {
+    "enable" : true,
+    "position" : {
+      "x" : 179.53122,
+      "y" : 354.08884,
+      "z" : 0.0
+    },
+    "rotation" : {
+      "x" : 0.0,
+      "y" : 0.0,
+      "z" : 0.0
+    },
+    "scale" : {
+      "x" : 1.0,
+      "y" : 1.0,
+      "z" : 1.0
+    }
+  } ] ],
+  "parent" : "camera"
+}, {
+  "name" : "E4",
+  "components" : [ [ "game.component.OverlayScript", {
+    "enable" : true
+  } ], [ "com.gemengine.component.PointComponent2", {
+    "enable" : true,
+    "position" : {
+      "x" : 485.42334,
+      "y" : 173.80933,
+      "z" : 0.0
+    },
+    "rotation" : {
+      "x" : 0.0,
+      "y" : 0.0,
+      "z" : -383.52417
+    },
+    "scale" : {
+      "x" : 0.2,
+      "y" : 0.2,
+      "z" : 0.2
+    }
+  } ], [ "com.gemengine.component.twod.SpriteAtlasComponent", {
+    "enable" : true,
+    "priority" : 0,
+    "texturePath" : "assets/atlas/lipsyBoss.atlas",
+    "name" : "lipsy",
+    "frame" : 0
+  } ], [ "game.component.AutoScript", {
+    "enable" : true,
+    "dir" : {
+      "x" : -0.08618919,
+      "y" : -0.35805133,
+      "z" : 0.0
+    },
+    "frame" : 17.0
+  } ] ],
+  "parent" : "camera"
+}, {
+  "name" : "overlay_E4",
+  "components" : [ [ "com.gemengine.component.twod.LabelComponent", {
+    "enable" : true,
+    "priority" : 0,
+    "fontPath" : "assets/font/roboto_regular.fnt",
+    "text" : "E4",
+    "fontScale" : 0.4,
+    "wrap" : false,
+    "offsetX" : 0.0,
+    "offsetY" : 89.0,
+    "halign" : 1
+  } ], [ "com.gemengine.component.base.PointComponent", {
+    "enable" : true,
+    "position" : {
+      "x" : 485.70154,
+      "y" : 174.38715,
+      "z" : 0.0
+    },
+    "rotation" : {
+      "x" : 0.0,
+      "y" : 0.0,
+      "z" : 0.0
+    },
+    "scale" : {
+      "x" : 1.0,
+      "y" : 1.0,
+      "z" : 1.0
+    }
+  } ] ],
+  "parent" : "camera"
+}, {
+  "name" : "E5",
+  "components" : [ [ "game.component.OverlayScript", {
+    "enable" : true
+  } ], [ "com.gemengine.component.PointComponent2", {
+    "enable" : true,
+    "position" : {
+      "x" : 23.115873,
+      "y" : 376.8154,
+      "z" : 0.0
+    },
+    "rotation" : {
+      "x" : 0.0,
+      "y" : 0.0,
+      "z" : -311.99115
+    },
+    "scale" : {
+      "x" : 0.2,
+      "y" : 0.2,
+      "z" : 0.2
+    }
+  } ], [ "com.gemengine.component.twod.SpriteAtlasComponent", {
+    "enable" : true,
+    "priority" : 0,
+    "texturePath" : "assets/atlas/lipsyBoss.atlas",
+    "name" : "lipsy",
+    "frame" : 1
+  } ], [ "game.component.AutoScript", {
+    "enable" : true,
+    "dir" : {
+      "x" : 0.21684396,
+      "y" : -0.13546948,
+      "z" : 0.0
+    },
+    "frame" : 36.0
+  } ] ],
+  "parent" : "camera"
+}, {
+  "name" : "overlay_E5",
+  "components" : [ [ "com.gemengine.component.twod.LabelComponent", {
+    "enable" : true,
+    "priority" : 0,
+    "fontPath" : "assets/font/roboto_regular.fnt",
+    "text" : "E5",
+    "fontScale" : 0.4,
+    "wrap" : false,
+    "offsetX" : 0.0,
+    "offsetY" : 79.4,
+    "halign" : 1
+  } ], [ "com.gemengine.component.base.PointComponent", {
+    "enable" : true,
+    "position" : {
+      "x" : 22.415987,
+      "y" : 377.03403,
+      "z" : 0.0
+    },
+    "rotation" : {
+      "x" : 0.0,
+      "y" : 0.0,
+      "z" : 0.0
+    },
+    "scale" : {
+      "x" : 1.0,
+      "y" : 1.0,
+      "z" : 1.0
+    }
+  } ] ],
+  "parent" : "camera"
+}, {
+  "name" : "E6",
+  "components" : [ [ "game.component.OverlayScript", {
+    "enable" : true
+  } ], [ "com.gemengine.component.PointComponent2", {
+    "enable" : true,
+    "position" : {
+      "x" : 399.1853,
+      "y" : 30.344917,
+      "z" : 0.0
+    },
+    "rotation" : {
+      "x" : 0.0,
+      "y" : 0.0,
+      "z" : -209.74011
+    },
+    "scale" : {
+      "x" : 0.2,
+      "y" : 0.2,
+      "z" : 0.2
+    }
+  } ], [ "com.gemengine.component.twod.SpriteAtlasComponent", {
+    "enable" : true,
+    "priority" : 0,
+    "texturePath" : "assets/atlas/lipsyBoss.atlas",
+    "name" : "lipsy",
+    "frame" : 1
+  } ], [ "game.component.AutoScript", {
+    "enable" : true,
+    "dir" : {
+      "x" : 0.1766172,
+      "y" : 0.4923782,
+      "z" : 0.0
+    },
+    "frame" : 14.0
+  } ] ],
+  "parent" : "camera"
+}, {
+  "name" : "overlay_E6",
+  "components" : [ [ "com.gemengine.component.twod.LabelComponent", {
+    "enable" : true,
+    "priority" : 0,
+    "fontPath" : "assets/font/roboto_regular.fnt",
+    "text" : "E6",
+    "fontScale" : 0.4,
+    "wrap" : false,
+    "offsetX" : 0.0,
+    "offsetY" : 79.4,
+    "halign" : 1
+  } ], [ "com.gemengine.component.base.PointComponent", {
+    "enable" : true,
+    "position" : {
+      "x" : 398.61526,
+      "y" : 29.550318,
+      "z" : 0.0
+    },
+    "rotation" : {
+      "x" : 0.0,
+      "y" : 0.0,
+      "z" : 0.0
+    },
+    "scale" : {
+      "x" : 1.0,
+      "y" : 1.0,
+      "z" : 1.0
+    }
+  } ] ],
+  "parent" : "camera"
+}, {
+  "name" : "E7",
+  "components" : [ [ "game.component.OverlayScript", {
+    "enable" : true
+  } ], [ "com.gemengine.component.PointComponent2", {
+    "enable" : true,
+    "position" : {
+      "x" : 396.7429,
+      "y" : 161.51517,
+      "z" : 0.0
+    },
+    "rotation" : {
+      "x" : 0.0,
+      "y" : 0.0,
+      "z" : -113.52489
+    },
+    "scale" : {
+      "x" : 0.2,
+      "y" : 0.2,
+      "z" : 0.2
+    }
+  } ], [ "com.gemengine.component.twod.SpriteAtlasComponent", {
+    "enable" : true,
+    "priority" : 0,
+    "texturePath" : "assets/atlas/lipsyBoss.atlas",
+    "name" : "lipsy",
+    "frame" : 1
+  } ], [ "game.component.AutoScript", {
+    "enable" : true,
+    "dir" : {
+      "x" : -0.33318374,
+      "y" : 0.08004015,
+      "z" : 0.0
+    },
+    "frame" : 1.0
+  } ] ],
+  "parent" : "camera"
+}, {
+  "name" : "overlay_E7",
+  "components" : [ [ "com.gemengine.component.twod.LabelComponent", {
+    "enable" : true,
+    "priority" : 0,
+    "fontPath" : "assets/font/roboto_regular.fnt",
+    "text" : "E7",
+    "fontScale" : 0.4,
+    "wrap" : false,
+    "offsetX" : 0.0,
+    "offsetY" : 79.4,
+    "halign" : 1
+  } ], [ "com.gemengine.component.base.PointComponent", {
+    "enable" : true,
+    "position" : {
+      "x" : 397.81827,
+      "y" : 161.386,
+      "z" : 0.0
+    },
+    "rotation" : {
+      "x" : 0.0,
+      "y" : 0.0,
+      "z" : 0.0
+    },
+    "scale" : {
+      "x" : 1.0,
+      "y" : 1.0,
+      "z" : 1.0
+    }
+  } ] ],
+  "parent" : "camera"
+}, {
+  "name" : "E8",
+  "components" : [ [ "game.component.OverlayScript", {
+    "enable" : true
+  } ], [ "com.gemengine.component.PointComponent2", {
+    "enable" : true,
+    "position" : {
+      "x" : 136.28242,
+      "y" : 104.58752,
+      "z" : 0.0
+    },
+    "rotation" : {
+      "x" : 0.0,
+      "y" : 0.0,
+      "z" : -255.61665
+    },
+    "scale" : {
+      "x" : 0.2,
+      "y" : 0.2,
+      "z" : 0.2
+    }
+  } ], [ "com.gemengine.component.twod.SpriteAtlasComponent", {
+    "enable" : true,
+    "priority" : 0,
+    "texturePath" : "assets/atlas/lipsyBoss.atlas",
+    "name" : "lipsy",
+    "frame" : 0
+  } ], [ "game.component.AutoScript", {
+    "enable" : true,
+    "dir" : {
+      "x" : 0.3585621,
+      "y" : 0.16254394,
+      "z" : 0.0
+    },
+    "frame" : 32.0
+  } ] ],
+  "parent" : "camera"
+}, {
+  "name" : "overlay_E8",
+  "components" : [ [ "com.gemengine.component.twod.LabelComponent", {
+    "enable" : true,
+    "priority" : 0,
+    "fontPath" : "assets/font/roboto_regular.fnt",
+    "text" : "E8",
+    "fontScale" : 0.4,
+    "wrap" : false,
+    "offsetX" : 0.0,
+    "offsetY" : 89.0,
+    "halign" : 1
+  } ], [ "com.gemengine.component.base.PointComponent", {
+    "enable" : true,
+    "position" : {
+      "x" : 135.12512,
+      "y" : 104.3252,
+      "z" : 0.0
+    },
+    "rotation" : {
+      "x" : 0.0,
+      "y" : 0.0,
+      "z" : 0.0
+    },
+    "scale" : {
+      "x" : 1.0,
+      "y" : 1.0,
+      "z" : 1.0
+    }
+  } ] ],
+  "parent" : "camera"
+}, {
+  "name" : "E9",
+  "components" : [ [ "game.component.OverlayScript", {
+    "enable" : true
+  } ], [ "com.gemengine.component.PointComponent2", {
+    "enable" : true,
+    "position" : {
+      "x" : 411.30115,
+      "y" : 47.67229,
+      "z" : 0.0
+    },
+    "rotation" : {
+      "x" : 0.0,
+      "y" : 0.0,
+      "z" : -321.41473
+    },
+    "scale" : {
+      "x" : 0.2,
+      "y" : 0.2,
+      "z" : 0.2
+    }
+  } ], [ "com.gemengine.component.twod.SpriteAtlasComponent", {
+    "enable" : true,
+    "priority" : 0,
+    "texturePath" : "assets/atlas/lipsyBoss.atlas",
+    "name" : "lipsy",
+    "frame" : 0
+  } ], [ "game.component.AutoScript", {
+    "enable" : true,
+    "dir" : {
+      "x" : 0.36936513,
+      "y" : -0.32585594,
+      "z" : 0.0
+    },
+    "frame" : 22.0
+  } ] ],
+  "parent" : "camera"
+}, {
+  "name" : "overlay_E9",
+  "components" : [ [ "com.gemengine.component.twod.LabelComponent", {
+    "enable" : true,
+    "priority" : 0,
+    "fontPath" : "assets/font/roboto_regular.fnt",
+    "text" : "E9",
+    "fontScale" : 0.4,
+    "wrap" : false,
+    "offsetX" : 0.0,
+    "offsetY" : 89.0,
+    "halign" : 1
+  } ], [ "com.gemengine.component.base.PointComponent", {
+    "enable" : true,
+    "position" : {
+      "x" : 410.10898,
+      "y" : 48.19816,
+      "z" : 0.0
+    },
+    "rotation" : {
+      "x" : 0.0,
+      "y" : 0.0,
+      "z" : 0.0
+    },
+    "scale" : {
+      "x" : 1.0,
+      "y" : 1.0,
+      "z" : 1.0
+    }
+  } ] ],
+  "parent" : "camera"
+}, {
+  "name" : "E10",
+  "components" : [ [ "game.component.OverlayScript", {
+    "enable" : true
+  } ], [ "com.gemengine.component.PointComponent2", {
+    "enable" : true,
+    "position" : {
+      "x" : 521.10376,
+      "y" : 410.90686,
+      "z" : 0.0
+    },
+    "rotation" : {
+      "x" : 0.0,
+      "y" : 0.0,
+      "z" : -154.2366
+    },
+    "scale" : {
+      "x" : 0.2,
+      "y" : 0.2,
+      "z" : 0.2
+    }
+  } ], [ "com.gemengine.component.twod.SpriteAtlasComponent", {
+    "enable" : true,
+    "priority" : 0,
+    "texturePath" : "assets/atlas/lipsyBoss.atlas",
+    "name" : "lipsy",
+    "frame" : 0
+  } ], [ "game.component.AutoScript", {
+    "enable" : true,
+    "dir" : {
+      "x" : -0.2720707,
+      "y" : 0.37756762,
+      "z" : 0.0
+    },
+    "frame" : 13.0
+  } ] ],
+  "parent" : "camera"
+}, {
+  "name" : "overlay_E10",
+  "components" : [ [ "com.gemengine.component.twod.LabelComponent", {
+    "enable" : true,
+    "priority" : 0,
+    "fontPath" : "assets/font/roboto_regular.fnt",
+    "text" : "E10",
+    "fontScale" : 0.4,
+    "wrap" : false,
+    "offsetX" : 0.0,
+    "offsetY" : 89.0,
+    "halign" : 1
+  } ], [ "com.gemengine.component.base.PointComponent", {
+    "enable" : true,
+    "position" : {
+      "x" : 521.9819,
+      "y" : 410.29755,
+      "z" : 0.0
+    },
+    "rotation" : {
+      "x" : 0.0,
+      "y" : 0.0,
+      "z" : 0.0
+    },
+    "scale" : {
+      "x" : 1.0,
+      "y" : 1.0,
+      "z" : 1.0
+    }
+  } ] ],
+  "parent" : "camera"
+}, {
+  "name" : "E11",
+  "components" : [ [ "game.component.OverlayScript", {
+    "enable" : true
+  } ], [ "com.gemengine.component.PointComponent2", {
+    "enable" : true,
+    "position" : {
+      "x" : 384.92157,
+      "y" : 307.51913,
+      "z" : 0.0
+    },
+    "rotation" : {
+      "x" : 0.0,
+      "y" : 0.0,
+      "z" : -414.3833
+    },
+    "scale" : {
+      "x" : 0.2,
+      "y" : 0.2,
+      "z" : 0.2
+    }
+  } ], [ "com.gemengine.component.twod.SpriteAtlasComponent", {
+    "enable" : true,
+    "priority" : 0,
+    "texturePath" : "assets/atlas/lipsyBoss.atlas",
+    "name" : "lipsy",
+    "frame" : 1
+  } ], [ "game.component.AutoScript", {
+    "enable" : true,
+    "dir" : {
+      "x" : -0.41352436,
+      "y" : -0.42232376,
+      "z" : 0.0
+    },
+    "frame" : 20.0
+  } ] ],
+  "parent" : "camera"
+}, {
+  "name" : "overlay_E11",
+  "components" : [ [ "com.gemengine.component.twod.LabelComponent", {
+    "enable" : true,
+    "priority" : 0,
+    "fontPath" : "assets/font/roboto_regular.fnt",
+    "text" : "E11",
+    "fontScale" : 0.4,
+    "wrap" : false,
+    "offsetX" : 0.0,
+    "offsetY" : 79.4,
+    "halign" : 1
+  } ], [ "com.gemengine.component.base.PointComponent", {
+    "enable" : true,
+    "position" : {
+      "x" : 386.25626,
+      "y" : 308.20068,
+      "z" : 0.0
+    },
+    "rotation" : {
+      "x" : 0.0,
+      "y" : 0.0,
+      "z" : 0.0
+    },
+    "scale" : {
+      "x" : 1.0,
+      "y" : 1.0,
+      "z" : 1.0
+    }
+  } ] ],
+  "parent" : "camera"
+}, {
+  "name" : "E12",
+  "components" : [ [ "game.component.OverlayScript", {
+    "enable" : true
+  } ], [ "com.gemengine.component.PointComponent2", {
+    "enable" : true,
+    "position" : {
+      "x" : 528.9505,
+      "y" : 133.9931,
+      "z" : 0.0
+    },
+    "rotation" : {
+      "x" : 0.0,
+      "y" : 0.0,
+      "z" : -149.58264
+    },
+    "scale" : {
+      "x" : 0.2,
+      "y" : 0.2,
+      "z" : 0.2
+    }
+  } ], [ "com.gemengine.component.twod.SpriteAtlasComponent", {
+    "enable" : true,
+    "priority" : 0,
+    "texturePath" : "assets/atlas/lipsyBoss.atlas",
+    "name" : "lipsy",
+    "frame" : 0
+  } ], [ "game.component.AutoScript", {
+    "enable" : true,
+    "dir" : {
+      "x" : -0.2706599,
+      "y" : 0.31768146,
+      "z" : 0.0
+    },
+    "frame" : 31.0
+  } ] ],
+  "parent" : "camera"
+}, {
+  "name" : "overlay_E12",
+  "components" : [ [ "com.gemengine.component.twod.LabelComponent", {
+    "enable" : true,
+    "priority" : 0,
+    "fontPath" : "assets/font/roboto_regular.fnt",
+    "text" : "E12",
+    "fontScale" : 0.4,
+    "wrap" : false,
+    "offsetX" : 0.0,
+    "offsetY" : 89.0,
+    "halign" : 1
+  } ], [ "com.gemengine.component.base.PointComponent", {
+    "enable" : true,
+    "position" : {
+      "x" : 529.8241,
+      "y" : 133.48042,
+      "z" : 0.0
+    },
+    "rotation" : {
+      "x" : 0.0,
+      "y" : 0.0,
+      "z" : 0.0
+    },
+    "scale" : {
+      "x" : 1.0,
+      "y" : 1.0,
+      "z" : 1.0
+    }
+  } ] ],
+  "parent" : "camera"
+}, {
+  "name" : "E13",
+  "components" : [ [ "game.component.OverlayScript", {
+    "enable" : true
+  } ], [ "com.gemengine.component.PointComponent2", {
+    "enable" : true,
+    "position" : {
+      "x" : 272.8306,
+      "y" : 260.682,
+      "z" : 0.0
+    },
+    "rotation" : {
+      "x" : 0.0,
+      "y" : 0.0,
+      "z" : -378.83322
+    },
+    "scale" : {
+      "x" : 0.2,
+      "y" : 0.2,
+      "z" : 0.2
+    }
+  } ], [ "com.gemengine.component.twod.SpriteAtlasComponent", {
+    "enable" : true,
+    "priority" : 0,
+    "texturePath" : "assets/atlas/lipsyBoss.atlas",
+    "name" : "lipsy",
+    "frame" : 0
+  } ], [ "game.component.AutoScript", {
+    "enable" : true,
+    "dir" : {
+      "x" : -0.037023924,
+      "y" : -0.23797323,
+      "z" : 0.0
+    },
+    "frame" : 8.0
+  } ] ],
+  "parent" : "camera"
+}, {
+  "name" : "overlay_E13",
+  "components" : [ [ "com.gemengine.component.twod.LabelComponent", {
+    "enable" : true,
+    "priority" : 0,
+    "fontPath" : "assets/font/roboto_regular.fnt",
+    "text" : "E13",
+    "fontScale" : 0.4,
+    "wrap" : false,
+    "offsetX" : 0.0,
+    "offsetY" : 89.0,
+    "halign" : 1
+  } ], [ "com.gemengine.component.base.PointComponent", {
+    "enable" : true,
+    "position" : {
+      "x" : 272.9501,
+      "y" : 261.06604,
+      "z" : 0.0
+    },
+    "rotation" : {
+      "x" : 0.0,
+      "y" : 0.0,
+      "z" : 0.0
+    },
+    "scale" : {
+      "x" : 1.0,
+      "y" : 1.0,
+      "z" : 1.0
+    }
+  } ] ],
+  "parent" : "camera"
+}, {
+  "name" : "E14",
+  "components" : [ [ "game.component.OverlayScript", {
+    "enable" : true
+  } ], [ "com.gemengine.component.PointComponent2", {
+    "enable" : true,
+    "position" : {
+      "x" : 439.4073,
+      "y" : 16.220793,
+      "z" : 0.0
+    },
+    "rotation" : {
+      "x" : 0.0,
+      "y" : 0.0,
+      "z" : -216.02559
+    },
+    "scale" : {
+      "x" : 0.2,
+      "y" : 0.2,
+      "z" : 0.2
+    }
+  } ], [ "com.gemengine.component.twod.SpriteAtlasComponent", {
+    "enable" : true,
+    "priority" : 0,
+    "texturePath" : "assets/atlas/lipsyBoss.atlas",
+    "name" : "lipsy",
+    "frame" : 0
+  } ], [ "game.component.AutoScript", {
+    "enable" : true,
+    "dir" : {
+      "x" : 0.23800153,
+      "y" : 0.487562,
+      "z" : 0.0
+    },
+    "frame" : 0.0
+  } ] ],
+  "parent" : "camera"
+}, {
+  "name" : "overlay_E14",
+  "components" : [ [ "com.gemengine.component.twod.LabelComponent", {
+    "enable" : true,
+    "priority" : 0,
+    "fontPath" : "assets/font/roboto_regular.fnt",
+    "text" : "E14",
+    "fontScale" : 0.4,
+    "wrap" : false,
+    "offsetX" : 0.0,
+    "offsetY" : 79.4,
+    "halign" : 1
+  } ], [ "com.gemengine.component.base.PointComponent", {
+    "enable" : true,
+    "position" : {
+      "x" : 438.6391,
+      "y" : 15.433964,
+      "z" : 0.0
+    },
+    "rotation" : {
+      "x" : 0.0,
+      "y" : 0.0,
+      "z" : 0.0
+    },
+    "scale" : {
+      "x" : 1.0,
+      "y" : 1.0,
+      "z" : 1.0
+    }
+  } ] ],
+  "parent" : "camera"
+}, {
+  "name" : "E15",
+  "components" : [ [ "game.component.OverlayScript", {
+    "enable" : true
+  } ], [ "com.gemengine.component.PointComponent2", {
+    "enable" : true,
+    "position" : {
+      "x" : 522.38983,
+      "y" : 267.6027,
+      "z" : 0.0
+    },
+    "rotation" : {
+      "x" : 0.0,
+      "y" : 0.0,
+      "z" : -245.4513
+    },
+    "scale" : {
+      "x" : 0.2,
+      "y" : 0.2,
+      "z" : 0.2
+    }
+  } ], [ "com.gemengine.component.twod.SpriteAtlasComponent", {
+    "enable" : true,
+    "priority" : 0,
+    "texturePath" : "assets/atlas/lipsyBoss.atlas",
+    "name" : "lipsy",
+    "frame" : 0
+  } ], [ "game.component.AutoScript", {
+    "enable" : true,
+    "dir" : {
+      "x" : 0.4662835,
+      "y" : 0.32109347,
+      "z" : 0.0
+    },
+    "frame" : 3.0
+  } ] ],
+  "parent" : "camera"
+}, {
+  "name" : "overlay_E15",
+  "components" : [ [ "com.gemengine.component.twod.LabelComponent", {
+    "enable" : true,
+    "priority" : 0,
+    "fontPath" : "assets/font/roboto_regular.fnt",
+    "text" : "E15",
+    "fontScale" : 0.4,
+    "wrap" : false,
+    "offsetX" : 0.0,
+    "offsetY" : 89.0,
+    "halign" : 1
+  } ], [ "com.gemengine.component.base.PointComponent", {
+    "enable" : true,
+    "position" : {
+      "x" : 520.8848,
+      "y" : 267.0845,
+      "z" : 0.0
+    },
+    "rotation" : {
+      "x" : 0.0,
+      "y" : 0.0,
+      "z" : 0.0
+    },
+    "scale" : {
+      "x" : 1.0,
+      "y" : 1.0,
+      "z" : 1.0
+    }
+  } ] ],
+  "parent" : "camera"
+}, {
+  "name" : "E16",
+  "components" : [ [ "game.component.OverlayScript", {
+    "enable" : true
+  } ], [ "com.gemengine.component.PointComponent2", {
+    "enable" : true,
+    "position" : {
+      "x" : 86.53524,
+      "y" : 348.6184,
+      "z" : 0.0
+    },
+    "rotation" : {
+      "x" : 0.0,
+      "y" : 0.0,
+      "z" : -278.8621
+    },
+    "scale" : {
+      "x" : 0.2,
+      "y" : 0.2,
+      "z" : 0.2
+    }
+  } ], [ "com.gemengine.component.twod.SpriteAtlasComponent", {
+    "enable" : true,
+    "priority" : 0,
+    "texturePath" : "assets/atlas/lipsyBoss.atlas",
+    "name" : "lipsy",
+    "frame" : 1
+  } ], [ "game.component.AutoScript", {
+    "enable" : true,
+    "dir" : {
+      "x" : 0.48124662,
+      "y" : 0.009559953,
+      "z" : 0.0
+    },
+    "frame" : 28.0
+  } ] ],
+  "parent" : "camera"
+}, {
+  "name" : "overlay_E16",
+  "components" : [ [ "com.gemengine.component.twod.LabelComponent", {
+    "enable" : true,
+    "priority" : 0,
+    "fontPath" : "assets/font/roboto_regular.fnt",
+    "text" : "E16",
+    "fontScale" : 0.4,
+    "wrap" : false,
+    "offsetX" : 0.0,
+    "offsetY" : 79.4,
+    "halign" : 1
+  } ], [ "com.gemengine.component.base.PointComponent", {
+    "enable" : true,
+    "position" : {
+      "x" : 84.981964,
+      "y" : 348.60297,
+      "z" : 0.0
+    },
+    "rotation" : {
+      "x" : 0.0,
+      "y" : 0.0,
+      "z" : 0.0
+    },
+    "scale" : {
+      "x" : 1.0,
+      "y" : 1.0,
+      "z" : 1.0
+    }
+  } ] ],
+  "parent" : "camera"
+}, {
+  "name" : "E17",
+  "components" : [ [ "game.component.OverlayScript", {
+    "enable" : true
+  } ], [ "com.gemengine.component.PointComponent2", {
+    "enable" : true,
+    "position" : {
+      "x" : 260.26453,
+      "y" : 99.08853,
+      "z" : 0.0
+    },
+    "rotation" : {
+      "x" : 0.0,
+      "y" : 0.0,
+      "z" : -130.38974
+    },
+    "scale" : {
+      "x" : 0.2,
+      "y" : 0.2,
+      "z" : 0.2
+    }
+  } ], [ "com.gemengine.component.twod.SpriteAtlasComponent", {
+    "enable" : true,
+    "priority" : 0,
+    "texturePath" : "assets/atlas/lipsyBoss.atlas",
+    "name" : "lipsy",
+    "frame" : 0
+  } ], [ "game.component.AutoScript", {
+    "enable" : true,
+    "dir" : {
+      "x" : -0.18314382,
+      "y" : 0.10734097,
+      "z" : 0.0
+    },
+    "frame" : 20.0
+  } ] ],
+  "parent" : "camera"
+}, {
+  "name" : "overlay_E17",
+  "components" : [ [ "com.gemengine.component.twod.LabelComponent", {
+    "enable" : true,
+    "priority" : 0,
+    "fontPath" : "assets/font/roboto_regular.fnt",
+    "text" : "E17",
+    "fontScale" : 0.4,
+    "wrap" : false,
+    "offsetX" : 0.0,
+    "offsetY" : 89.0,
+    "halign" : 1
+  } ], [ "com.gemengine.component.base.PointComponent", {
+    "enable" : true,
+    "position" : {
+      "x" : 260.85565,
+      "y" : 98.915306,
+      "z" : 0.0
+    },
+    "rotation" : {
+      "x" : 0.0,
+      "y" : 0.0,
+      "z" : 0.0
+    },
+    "scale" : {
+      "x" : 1.0,
+      "y" : 1.0,
+      "z" : 1.0
+    }
+  } ] ],
+  "parent" : "camera"
+} ]

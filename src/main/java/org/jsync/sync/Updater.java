@@ -44,8 +44,7 @@ public abstract class Updater {
 	protected final Repository repository;
 
 	/**
-	 * Create a new Updater with the path set to the res folder, which is
-	 * default
+	 * Create a new Updater with the path set to the res folder, which is default
 	 * 
 	 * @throws IOException
 	 * @throws NoFilepatternException
@@ -79,11 +78,15 @@ public abstract class Updater {
 		git = new Git(repository);
 		val head = repository.resolve(Constants.HEAD);
 		// if we are have a null head, do nothing.
-		if (head != null){
+		if (head != null) {
 			try {
 				git.checkout().setForce(true).setName(branch).call();
 			} catch (Exception e) {
-				git.checkout().setCreateBranch(true).setForce(true).setName(branch).call();
+				try {
+					git.checkout().setCreateBranch(true).setForce(true).setName(branch).call();
+				} catch (Exception ee) {
+					// if we are puller
+				}
 			}
 		}
 	}
@@ -106,6 +109,7 @@ public abstract class Updater {
 
 	/**
 	 * Get all files currently available
+	 * 
 	 * @return list of files paths
 	 * @throws RevisionSyntaxException
 	 * @throws AmbiguousObjectException
@@ -133,11 +137,9 @@ public abstract class Updater {
 			while (treeWalk.next()) {
 				list.add(treeWalk.getPathString());
 			}
-		}
-		catch(Exception e){
+		} catch (Exception e) {
 			throw e;
-		}
-		finally {
+		} finally {
 			walk.close();
 			treeWalk.close();
 		}
@@ -146,8 +148,8 @@ public abstract class Updater {
 
 	public int getRevision() throws IOException {
 		val head = repository.resolve(Constants.HEAD);
-		
-		if(head == null)
+
+		if (head == null)
 			return 0;
 
 		val stream = new ByteArrayOutputStream();
