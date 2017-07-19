@@ -51,7 +51,7 @@ public abstract class Updater {
 	 * @throws GitAPIException
 	 */
 	public Updater() throws IOException, NoFilepatternException, GitAPIException {
-		this("res", "master");
+		this("assets", "master");
 	}
 
 	/**
