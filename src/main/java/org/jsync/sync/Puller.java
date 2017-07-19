@@ -33,7 +33,7 @@ public class Puller extends Updater {
 	private final String remote;
 
 	public Puller() throws NoFilepatternException, IOException, GitAPIException {
-		this("res", "master", "http://github.com/Ughuuu/JavaSync.git");
+		this("assets", "master", "http://github.com/Ughuuu/JavaSync.git");
 	}
 
 	public Puller(String localFolder, String branch, String remote)
