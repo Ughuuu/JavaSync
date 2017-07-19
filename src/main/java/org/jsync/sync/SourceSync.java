@@ -20,8 +20,8 @@ public class SourceSync {
 	public static String options = "";
 
 	/**
-	 * Update all the given classes at once. They should be from the same folder
-	 * as source and have the same destination folder and the same options.
+	 * Update all the given classes at once. They should be from the same folder as
+	 * source and have the same destination folder and the same options.
 	 * 
 	 * @param syncs
 	 *            The sync classes, all in the same root folder.
@@ -62,7 +62,7 @@ public class SourceSync {
 		val outputStream = new PrintWriter(outputWriter);
 		val success = BatchCompiler.compile(
 				filesFolder + " -d " + first.folderDestinationName + " -cp " + System.getProperty("java.class.path")
-						+ ";" + first.folderDestinationName + " " + SourceSync.options,
+						+ ";" + first.folderDestinationName + ";" + first.folderSourceName + " " + SourceSync.options,
 				outputStream, errorStream, null);
 		// handle error for each
 		for (val sync : syncs) {
@@ -73,15 +73,15 @@ public class SourceSync {
 	}
 
 	/**
-	 * The full name of the class, with the package. The package contains
-	 * dots(.) and the class and package are united by a dot(.) as well.
+	 * The full name of the class, with the package. The package contains dots(.)
+	 * and the class and package are united by a dot(.) as well.
 	 */
 	@Getter
 	private final String className;
 
 	/**
-	 * An instance of file for the class given by the class name. It has .java
-	 * at the end and is located at the source folder.
+	 * An instance of file for the class given by the class name. It has .java at
+	 * the end and is located at the source folder.
 	 */
 	private final File javaFile;
 
@@ -92,8 +92,7 @@ public class SourceSync {
 	private final String folderSourceName;
 
 	/**
-	 * The destination folder of the class. This is relative to the root
-	 * project.
+	 * The destination folder of the class. This is relative to the root project.
 	 */
 	@Getter
 	private final String folderDestinationName;
